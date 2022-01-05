@@ -1,0 +1,52 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:simple_flutter/core/constant/static_constant.dart';
+import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscreen_bloc.dart';
+import 'package:simple_flutter/get_it.dart';
+import 'package:simple_flutter/translations/codegen_loader.g.dart';
+import 'package:simple_flutter/utils/route_generator.dart';
+
+Future<void> mainInit() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  initDepInject();
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en')],
+      assetLoader: const CodegenLoader(),
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: MainApp(),
+    ),
+  );
+}
+
+class MainApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SplashScreenBloc>(
+          create: (context) => getIt(),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        builder: () => MaterialApp(
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          locale: context.locale,
+          onGenerateRoute: RouteGenerator.generateRoute,
+          title: StaticConstant.baseUrlDev,
+          initialRoute: AppRoute.init,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+        ),
+      ),
+    );
+  }
+}

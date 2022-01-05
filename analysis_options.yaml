@@ -1,0 +1,15 @@
+include: package:lint/analysis_options.yaml
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    prefer_const_declarations: true
+    always_use_package_imports: true
+    always_put_required_named_parameters_first: true
+    avoid_classes_with_only_static_members: false
+    sort_pub_dependencies: false
+    always_specify_types : false
+    depend_on_referenced_packages : false
+
+
+

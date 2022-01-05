@@ -1,0 +1,24 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        develop {
+            keyAlias 'key'
+            keyPassword '123456'
+            storeFile file('key.jks')
+            storePassword '123456'
+        }
+        tes {
+            keyAlias 'key'
+            keyPassword '123456'
+            storeFile file('key.jks')
+            storePassword '123456'
+        }
+        release {
+            keyAlias 'key'
+            keyPassword '123456'
+            storeFile file('key.jks')
+            storePassword '123456'
+        }
+    }
+}
