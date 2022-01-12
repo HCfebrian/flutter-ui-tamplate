@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dart';
-import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -32,9 +30,9 @@ class _WelcomePageState extends State<WelcomePage> {
                   color: const Color(0xffdf8e33).withAlpha(100),
                   offset: const Offset(2, 4),
                   blurRadius: 8,
-                  spreadRadius: 2)
+                  spreadRadius: 2,)
             ],
-            color: Colors.white),
+            color: Colors.white,),
         child: const Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
@@ -52,10 +50,10 @@ class _WelcomePageState extends State<WelcomePage> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 13),
+        padding: const EdgeInsets.symmetric(vertical: 13),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
           border: Border.all(color: Colors.white, width: 2),
         ),
         child: const Text(
@@ -88,7 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
             //   text: 'rnz',
             //   style: TextStyle(color: Colors.white, fontSize: 30),
             // ),
-          ]),
+          ],),
     );
   }
 
@@ -97,21 +95,21 @@ class _WelcomePageState extends State<WelcomePage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
               boxShadow: <BoxShadow>[
                 BoxShadow(
                     color: Colors.grey.shade200,
-                    offset: Offset(2, 4),
+                    offset: const Offset(2, 4),
                     blurRadius: 5,
-                    spreadRadius: 2)
+                    spreadRadius: 2,)
               ],
               gradient: const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xfffbb448), Color(0xffe46b10)])),
+                  colors: [Color(0xfffbb448), Color(0xffe46b10)],),),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

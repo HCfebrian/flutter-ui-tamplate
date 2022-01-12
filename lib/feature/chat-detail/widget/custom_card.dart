@@ -14,8 +14,8 @@ class ChatModel {
     required this.name,
     this.icon,
     this.isGroup,
-    this.time = "",
-    this.currentMessage = "",
+    this.time = '',
+    this.currentMessage = '',
     required this.status,
     this.select = false,
     this.id,
@@ -34,27 +34,27 @@ class CustomCard extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: CircleAvatar(
+          leading: const CircleAvatar(
             radius: 30,
-            child: Icon(Icons.person),
             backgroundColor: Colors.blueGrey,
+            child: Icon(Icons.person),
           ),
           title: Text(
             chatModel.name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
           subtitle: Row(
             children: [
-              Icon(Icons.done_all),
-              SizedBox(
+              const Icon(Icons.done_all),
+              const SizedBox(
                 width: 3,
               ),
               Text(
                 chatModel.status,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 13,
                 ),
               ),
@@ -62,8 +62,8 @@ class CustomCard extends StatelessWidget {
           ),
           trailing: Text(chatModel.time),
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 20, left: 80),
+        const Padding(
+          padding: EdgeInsets.only(right: 20, left: 80),
           child: Divider(
             thickness: 1,
           ),

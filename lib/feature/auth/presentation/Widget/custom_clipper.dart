@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class ClipPainter extends CustomClipper<Path> {
   @override
@@ -16,19 +15,23 @@ class ClipPainter extends CustomClipper<Path> {
     const secondControlPoint = Offset.zero;
     final secondEndPoint = Offset(width * .2, height * .3);
     path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
+        secondEndPoint.dx, secondEndPoint.dy,);
 
     /// [Left Middle]
     final fifthControlPoint = Offset(width * .3, height * .5);
     final fiftEndPoint = Offset(width * .23, height * .6);
     path.quadraticBezierTo(fifthControlPoint.dx, fifthControlPoint.dy,
-        fiftEndPoint.dx, fiftEndPoint.dy);
+        fiftEndPoint.dx, fiftEndPoint.dy,);
 
     /// [Bottom Left corner]
     final thirdControlPoint = Offset(0, height);
     final thirdEndPoint = Offset(width, height);
-    path.quadraticBezierTo(thirdControlPoint.dx, thirdControlPoint.dy,
-        thirdEndPoint.dx, thirdEndPoint.dy);
+    path.quadraticBezierTo(
+      thirdControlPoint.dx,
+      thirdControlPoint.dy,
+      thirdEndPoint.dx,
+      thirdEndPoint.dy,
+    );
 
     path.lineTo(0, size.height);
     path.close();

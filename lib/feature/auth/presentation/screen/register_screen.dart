@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_flutter/feature/auth/presentation/Widget/bezier_container.dart';
 
-import 'login_screen.dart';
+import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key ?key, this.title}) : super(key: key);
@@ -19,15 +19,15 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.pop(context);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              child: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-            Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+            const Text('Back',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)
           ],
         ),
       ),
@@ -36,23 +36,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextField(
               obscureText: isPassword,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
-                  filled: true))
+                  filled: true,),)
         ],
       ),
     );
@@ -61,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _submitButton() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -70,11 +70,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 color: Colors.grey.shade200,
                 offset: const Offset(2, 4),
                 blurRadius: 5,
-                spreadRadius: 2)
+                spreadRadius: 2,)
           ],
           gradient: const LinearGradient(
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+              colors: [Color(0xfffbb448), Color(0xfff7892b)],),),
       child: const Text(
         'Register Now',
         style: TextStyle(fontSize: 20, color: Colors.white),
@@ -86,11 +85,11 @@ class _SignUpPageState extends State<SignUpPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+            context, MaterialPageRoute(builder: (context) => const LoginPage()),);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +106,7 @@ class _SignUpPageState extends State<SignUpPage> {
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
-                  fontWeight: FontWeight.w600),
+                  fontWeight: FontWeight.w600,),
             ),
           ],
         ),
@@ -123,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w700,
-              color: Color(0xffe46b10)
+              color: Color(0xffe46b10),
           ),
 
           children: [
@@ -131,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
               text: 'Lab',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
-          ]),
+          ],),
     );
   }
 
@@ -156,21 +155,21 @@ class _SignUpPageState extends State<SignUpPage> {
             Positioned(
               top: -MediaQuery.of(context).size.height * .15,
               right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
+              child: const BezierContainer(),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(height: height * .2),
                     _title(),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     _emailPasswordWidget(),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     _submitButton(),

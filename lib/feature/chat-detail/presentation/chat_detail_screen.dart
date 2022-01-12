@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:http/http.dart' as http;
 
 String randomString() {
   final random = Random.secure();
@@ -22,8 +21,8 @@ class ChatDetail extends StatefulWidget {
 }
 
 class _ChatDetailState extends State<ChatDetail> {
-  List<types.Message> _messages = [];
-  int _page = 0;
+  final List<types.Message> _messages = [];
+  final int _page = 0;
 
   final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
 
@@ -33,10 +32,11 @@ class _ChatDetailState extends State<ChatDetail> {
     });
   }
 
-  void _handleMessageTap(types.Message message) async {
+  Future<void> _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
       await OpenFile.open(message.uri);
     }
+    return;
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -50,7 +50,7 @@ class _ChatDetailState extends State<ChatDetail> {
     _addMessage(textMessage);
   }
 
-  void _handleImageSelection() async {
+  Future<void> _handleImageSelection() async {
     final result = await ImagePicker().pickImage(
       imageQuality: 70,
       maxWidth: 1440,
@@ -123,7 +123,7 @@ class _ChatDetailState extends State<ChatDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Tony")),
+      appBar: AppBar(title: const Text('Tony')),
       body: SafeArea(
         bottom: false,
         child: Chat(
