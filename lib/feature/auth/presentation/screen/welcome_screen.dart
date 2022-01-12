@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
+import 'package:simple_flutter/utils/route_generator.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key, this.title}) : super(key: key);
@@ -16,8 +17,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.pushNamed(context, AppRoute.login);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -44,8 +46,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget _signUpButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => SignUpPage()));
+        Navigator.pushNamed(context, AppRoute.register);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -63,39 +66,13 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  Widget _label() {
-    return Container(
-        margin: const EdgeInsets.only(top: 40, bottom: 20),
-        child: Column(
-          children: const [
-            Text(
-              'Quick login with Touch ID',
-              style: TextStyle(color: Colors.white, fontSize: 17),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Icon(Icons.fingerprint, size: 90, color: Colors.white),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Touch ID',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ],
-        ));
-  }
+
 
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'd',
+          text: 'T',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline1,
             fontSize: 30,
@@ -104,13 +81,13 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           children: const [
             TextSpan(
-              text: 'ev',
+              text: 'Lab',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Colors.white, fontSize: 30),
-            ),
+            // TextSpan(
+            //   text: 'rnz',
+            //   style: TextStyle(color: Colors.white, fontSize: 30),
+            // ),
           ]),
     );
   }
@@ -150,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
               const SizedBox(
                 height: 20,
               ),
-              _label()
+              // _label()
             ],
           ),
         ),

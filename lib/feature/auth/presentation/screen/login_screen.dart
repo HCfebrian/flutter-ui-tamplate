@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_flutter/feature/auth/presentation/Widget/bezier_container.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
+import 'package:simple_flutter/utils/route_generator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, this.title}) : super(key: key);
@@ -62,27 +63,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.grey.shade200,
-            offset: const Offset(2, 4),
-            blurRadius: 5,
-            spreadRadius: 2,
-          )
-        ],
-        gradient: const LinearGradient(
-          colors: [Color(0xfffbb448), Color(0xfff7892b)],
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushReplacementNamed(context, AppRoute.home);
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey.shade200,
+              offset: const Offset(2, 4),
+              blurRadius: 5,
+              spreadRadius: 2,
+            )
+          ],
+          gradient: const LinearGradient(
+            colors: [Color(0xfffbb448), Color(0xfff7892b)],
+          ),
         ),
-      ),
-      child: const Text(
-        'Login',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        child: const Text(
+          'Login',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
       ),
     );
   }
@@ -215,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: const TextSpan(
-        text: 'd',
+        text: 'T',
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.w700,
@@ -223,12 +229,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         children: [
           TextSpan(
-            text: 'ev',
+            text: 'Lab',
             style: TextStyle(color: Colors.black, fontSize: 30),
-          ),
-          TextSpan(
-            text: 'rnz',
-            style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
           ),
         ],
       ),

@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<SplashScreenBloc, SplashScreenState>(
       listener: (context, state) {
         if (state is SplashSuccessState) {
-          Navigator.pushReplacementNamed(context, AppRoute.home);
+          Navigator.pushReplacementNamed(context, AppRoute.login);
         }
       },
       child: Scaffold(

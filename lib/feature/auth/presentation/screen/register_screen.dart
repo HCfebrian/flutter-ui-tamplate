@@ -64,18 +64,18 @@ class _SignUpPageState extends State<SignUpPage> {
       padding: EdgeInsets.symmetric(vertical: 15),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
                 color: Colors.grey.shade200,
-                offset: Offset(2, 4),
+                offset: const Offset(2, 4),
                 blurRadius: 5,
                 spreadRadius: 2)
           ],
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
               end: Alignment.centerRight,
-              colors: const [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
+              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+      child: const Text(
         'Register Now',
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
@@ -118,22 +118,18 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'd',
+      text: const TextSpan(
+          text: 'T',
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w700,
               color: Color(0xffe46b10)
           ),
 
-          children: const [
+          children: [
             TextSpan(
-              text: 'ev',
+              text: 'Lab',
               style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
             ),
           ]),
     );
