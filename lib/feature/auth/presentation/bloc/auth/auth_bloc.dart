@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
@@ -23,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           email: event.email,
           password: event.password,
         );
-        emit(AuthSuccessState());
+        emit(AuthFinished());
       } else {
         emit(const AuthErrorState(message: 'Password did not match'));
       }
@@ -32,6 +34,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCancelRequestEvent>((event, emit) {
       emit(AuthInitial());
       authUsecase.cancelRequest();
+    });
+
+
+    on<AuthLoginWithGoogleEvent>((event, emit) async{
+      emit(AuthInitial());
+      await authUsecase.loginWithGoogle();
+      emit(AuthFinished());
+      log("authFinished");
     });
   }
 }

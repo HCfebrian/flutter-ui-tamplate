@@ -1,5 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
+import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
 import 'package:simple_flutter/feature/auth/presentation/Widget/bezier_container.dart';
+import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
@@ -65,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacementNamed(context, AppRoute.home);
+        Navigator.pushReplacementNamed(context, AppRoute.messagesList);
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -126,57 +133,62 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _facebookButton() {
-    return Container(
-      height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xff1959a9),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(5),
-                  topLeft: Radius.circular(5),
+  Widget _googleOauthButton() {
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<AuthBloc>(context).add(AuthLoginWithGoogleEvent());
+      },
+      child: Container(
+        height: 50,
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xff1959a9),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(5),
+                  ),
                 ),
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'f',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xff2872ba),
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(5),
-                  topRight: Radius.circular(5),
-                ),
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'Log in with Facebook',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
+                alignment: Alignment.center,
+                child: const Text(
+                  'G',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 5,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xff2872ba),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(5),
+                    topRight: Radius.circular(5),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  'Log in with Google',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -221,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: const TextSpan(
-        text: 'T',
+        text: '',
         style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.w700,
@@ -229,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         children: [
           TextSpan(
-            text: 'Lab',
+            text: 'Login',
             style: TextStyle(color: Colors.black, fontSize: 30),
           ),
         ],
@@ -247,51 +259,79 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    BlocProvider.of<UserBloc>(context).add(UserStataeStreamInitEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SizedBox(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: const BezierContainer(),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    const SizedBox(height: 50),
-                    _emailPasswordWidget(),
-                    const SizedBox(height: 20),
-                    _submitButton(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.centerRight,
-                      child: const Text(
-                        'Forgot Password ?',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFinished) {
+              log("request get data");
+              // BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
+            }
+          },
+        ),
+        BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is UserLoggedInState) {
+              Navigator.pushNamed(context, AppRoute.messagesList);
+            }
+            if (state is UserLoggedOutState) {
+              Navigator.pushNamed(context, AppRoute.login);
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        body: SizedBox(
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: -height * .15,
+                right: -MediaQuery.of(context).size.width * .4,
+                child: const BezierContainer(),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .2),
+                      _title(),
+                      const SizedBox(height: 50),
+                      _emailPasswordWidget(),
+                      const SizedBox(height: 20),
+                      _submitButton(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.centerRight,
+                        child: const Text(
+                          'Forgot Password ?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    _divider(),
-                    _facebookButton(),
-                    SizedBox(height: height * .055),
-                    _createAccountLabel(),
-                  ],
+                      _divider(),
+                      _googleOauthButton(),
+                      SizedBox(height: height * .055),
+                      _createAccountLabel(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
-          ],
+              // Positioned(top: 40, left: 0, child: _backButton()),
+            ],
+          ),
         ),
       ),
     );

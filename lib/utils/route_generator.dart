@@ -5,7 +5,7 @@ import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dar
 import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/welcome_screen.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/chat_detail_screen.dart';
-import 'package:simple_flutter/feature/home/presentation/home_screen.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/screen/splash_screen.dart';
 
 class RouteGenerator {
@@ -16,8 +16,8 @@ class RouteGenerator {
       case AppRoute.init:
         return routeTransition(const SplashScreen());
 
-      case AppRoute.home:
-        return routeTransition(const HomeScreen());
+      case AppRoute.messagesList:
+        return routeTransition(const MessagesList());
 
       case AppRoute.login:
         return routeTransition(const LoginPage());
@@ -38,7 +38,7 @@ class RouteGenerator {
 
 class AppRoute {
   static const String init = '/';
-  static const String home = '/home';
+  static const String messagesList = '/messages';
   static const String login = '/login';
   static const String register = '/signUp';
   static const String detailChat = '/detailChat';

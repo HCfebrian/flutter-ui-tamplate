@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
   final String id;
-  final String name;
-  final String photoUrl;
+  final String? name;
+  final String? photoUrl;
 
   const UserEntity({
     required this.id,

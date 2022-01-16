@@ -13,7 +13,7 @@ flutter build apk --release --flavor production -t lib/main_production.dart // f
 
 #how to update package name android#
 
-flutter pub run change_app_package_name:main com.new.package.name
+flutter pub run change_app_package_name:main id.co.tlab.chatengine
 
 
 #how to update language and localization#

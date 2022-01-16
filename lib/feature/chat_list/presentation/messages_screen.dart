@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:simple_flutter/feature/chat_detail/widget/custom_card.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class MessagesList extends StatelessWidget {
+  const MessagesList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

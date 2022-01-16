@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
+import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 
 class AuthRepoImpl implements AuthRepoAbs {
   final Dio dio;
@@ -63,6 +65,25 @@ class AuthRepoImpl implements AuthRepoAbs {
   Future cancelRequest() async {
     cancelToken.cancel('aborted');
   }
+
+  @override
+  Future loginGoogleOauth() {
+    // TODO: implement loginGoogleOauth
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<UserEntity?> getUserStream() {
+    // TODO: implement getUserStream
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserEntity> getUser() {
+    // TODO: implement getUser
+    throw UnimplementedError();
+  }
+
 
 
 }

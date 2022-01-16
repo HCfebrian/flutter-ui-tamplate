@@ -43,3 +43,8 @@ class AuthCancelRequestEvent extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AuthLoginWithGoogleEvent extends AuthEvent{
+  @override
+  List<Object?> get props => [];
+}

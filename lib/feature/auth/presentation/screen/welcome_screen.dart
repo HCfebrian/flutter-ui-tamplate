@@ -70,7 +70,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'T',
+          text: '',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline1,
             fontSize: 30,
@@ -79,7 +79,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           children: const [
             TextSpan(
-              text: 'Lab',
+              text: 'Login',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             // TextSpan(

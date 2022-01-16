@@ -29,6 +29,11 @@ class AuthUsecase {
     return localPrefUsecase.saveAuthToken(token: token);
   }
 
+  Future loginWithGoogle() async{
+    authRepo.loginGoogleOauth();
+    return;
+  }
+
   Future logout(){
     return localPrefUsecase.deleteAuthToken();
   }
@@ -36,4 +41,5 @@ class AuthUsecase {
   Future cancelRequest() {
     return authRepo.cancelRequest();
   }
+
 }
