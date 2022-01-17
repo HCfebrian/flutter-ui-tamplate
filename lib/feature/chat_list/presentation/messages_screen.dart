@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:simple_flutter/feature/chat_detail/widget/custom_card.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/widget/custom_card.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
 class MessagesList extends StatelessWidget {

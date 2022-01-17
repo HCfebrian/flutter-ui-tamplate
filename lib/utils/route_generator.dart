@@ -4,7 +4,7 @@ import 'package:simple_flutter/core/shared_feature/not_found/screen/not_found_sc
 import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/register_screen.dart';
 import 'package:simple_flutter/feature/auth/presentation/screen/welcome_screen.dart';
-import 'package:simple_flutter/feature/chat_detail/presentation/chat_detail_screen.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/screen/chat_detail_screen.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/screen/splash_screen.dart';
 
