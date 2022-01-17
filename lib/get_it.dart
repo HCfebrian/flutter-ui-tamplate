@@ -18,6 +18,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
+import 'package:simple_flutter/feature/chat_list/data/repo/chat_list_repo_impl.dart';
+import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_list_repo_abs.dart';
+import 'package:simple_flutter/feature/chat_list/domain/usecase/contact_list_usecase.dart';
 import 'package:simple_flutter/feature/splash_screen/domain/usecase/splash_usecase.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscreen_bloc.dart';
 
@@ -49,11 +52,18 @@ void initDepInject() {
       userRepoAbs: getIt(),
     ),
   );
+  getIt.registerLazySingleton(
+    () => ContactListUsecase(chatListRepo: getIt()
+    ),
+  );
 
   // repo
 
   getIt.registerLazySingleton<ChatUserRepoAbs>(
     () => ChatUserRepoImpl(firebaseFirestore: getIt()),
+  );
+  getIt.registerLazySingleton<ChatListRepoAbs>(
+    () => ChatListRepoImpl(firebaseFirestore: getIt()),
   );
   getIt.registerLazySingleton<LocalPrefAbs>(
     () => SharedPrefImpl(
