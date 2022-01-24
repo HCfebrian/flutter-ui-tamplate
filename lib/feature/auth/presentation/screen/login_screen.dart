@@ -301,7 +301,10 @@ class _LoginPageState extends State<LoginPage> {
             }
             if (state is UserLoggedOutState) {
               Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoute.login, (route) => false);
+                context,
+                AppRoute.login,
+                (route) => false,
+              );
             }
           },
         ),

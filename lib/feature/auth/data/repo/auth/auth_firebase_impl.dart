@@ -22,8 +22,8 @@ class AuthFirebaseImpl implements AuthRepoAbs {
         streamUserEntity.add(
           UserEntity(
             id: event.uid,
-            firstName: event.displayName ?? "",
-            imageUrl: event.photoURL ?? "",
+            firstName: event.displayName ?? '',
+            imageUrl: event.photoURL ?? '',
           ),
         );
       }
@@ -45,17 +45,18 @@ class AuthFirebaseImpl implements AuthRepoAbs {
     final userCredential = await firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
         .onError((error, stackTrace) {
-      print("loginerror");
-      throw Exception("login failed");
+      print('loganberry');
+      throw Exception('login failed');
     });
     return userCredential.credential!.token.toString();
   }
 
   @override
-  Future<String> registerUser(
-      {required String email,
-      required String password,
-      required String username}) async {
+  Future<String> registerUser({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
     final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,

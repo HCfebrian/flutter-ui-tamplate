@@ -11,10 +11,10 @@ class StaticConstant {
 
 // Firebase constant
 
-const MESSAGE_COLLECTION = "messages";
-const USER_COLLECTION = "users";
-const CALL_COLLECTION = "call";
-const CONTACT_COLLECTION = "contact";
+const MESSAGE_COLLECTION = 'messages';
+const USER_COLLECTION = 'users';
+const CALL_COLLECTION = 'call';
+const CONTACT_COLLECTION = 'contact';
 
-const MESSAGE_TYPE_IMAGE = "image";
-const EMAIL_FIELD = "email";
+const MESSAGE_TYPE_IMAGE = 'image';
+const EMAIL_FIELD = 'email';

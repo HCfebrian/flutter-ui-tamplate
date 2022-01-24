@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/core/shared_feature/chat_util/domain/contract_repo/chat_user_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatUserRepoImpl implements ChatUserRepoAbs {
   final FirebaseFirestore firebaseFirestore;

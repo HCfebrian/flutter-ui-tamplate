@@ -1,9 +1,8 @@
-import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
-import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_list_repo_abs.dart';
-import 'package:simple_flutter/feature/chat_list/domain/entity/contact_entity.dart';
+import 'package:simple_flutter/feature/contact_list/domain/contract_repo/contact_list_repo_abs.dart';
+import 'package:simple_flutter/feature/contact_list/domain/entity/contact_entity.dart';
 
 class ContactListUsecase {
-  final ChatListRepoAbs chatListRepo;
+  final ContactListRepoAbs chatListRepo;
 
   ContactListUsecase({required this.chatListRepo});
 

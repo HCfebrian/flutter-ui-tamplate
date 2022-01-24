@@ -8,7 +8,7 @@ import 'package:simple_flutter/utils/background_utils.dart';
 class UsersPage extends StatelessWidget {
   const UsersPage({Key? key}) : super(key: key);
 
-  void _handlePressed(types.User otherUser, BuildContext context) async {
+  Future<void> _handlePressed(types.User otherUser, BuildContext context) async {
     final room = await FirebaseChatCore.instance.createRoom(otherUser);
 
     Navigator.of(context).pop();
