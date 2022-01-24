@@ -24,7 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UserGetDataEvent>(
       (event, emit) async {
         emit(UserLoadingState());
-        final UserEntity? user = await userUsecase.getMeData();
+        final UserEntity? user = await userUsecase.getUserData();
         if (user != null) {
           log('user now $user');
           emit(UserLoggedInState(userEntity: user));
@@ -42,7 +42,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
     on<UserStataeStreamInitEvent>(
       (event, emit) async {
-        userUsecase.getMeDataStream().listen(
+        userUsecase.getUserDataStream().listen(
           (event) {
             add(_UserGetUpdatedEvent(event));
           },
@@ -52,8 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<_UserGetUpdatedEvent>((event, emit) async {
       if (event.userEntity != null) {
-        log('user now dong ${event.userEntity?.name}');
-        chatUtilUsecase.registerUserChat(userEntity: event.userEntity!);
+        // chatUtilUsecase.registerUserChat(userEntity: event.userEntity!);
         emit(UserLoggedInState(userEntity: event.userEntity!));
       } else {
         emit(UserLoggedOutState());

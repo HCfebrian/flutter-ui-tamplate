@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 
@@ -81,6 +80,12 @@ class AuthRepoImpl implements AuthRepoAbs {
   @override
   Future<UserEntity> getUser() {
     // TODO: implement getUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future logout() {
+    // TODO: implement logout
     throw UnimplementedError();
   }
 

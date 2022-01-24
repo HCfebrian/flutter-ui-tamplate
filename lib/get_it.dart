@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -14,7 +15,6 @@ import 'package:simple_flutter/feature/auth/data/repo/user/user_repo_impl.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/user_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';

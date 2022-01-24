@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
+
 
 class AuthFirebaseImpl implements AuthRepoAbs {
   final FirebaseAuth firebaseAuth;
@@ -20,8 +23,8 @@ class AuthFirebaseImpl implements AuthRepoAbs {
         streamUserEntity.add(
           UserEntity(
             id: event.uid,
-            name: event.displayName ?? "",
-            photoUrl: event.photoURL ?? "",
+            firstName: event.displayName ?? "",
+            imageUrl: event.photoURL ?? "",
           ),
         );
       }
@@ -41,7 +44,11 @@ class AuthFirebaseImpl implements AuthRepoAbs {
       required String password,
       String? username}) async {
     final userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
+        .signInWithEmailAndPassword(email: email, password: password)
+        .onError((error, stackTrace) {
+      print("loginerror");
+      throw Exception("login failed");
+    });
     return userCredential.credential!.token.toString();
   }
 
@@ -49,10 +56,21 @@ class AuthFirebaseImpl implements AuthRepoAbs {
   Future<String> registerUser(
       {required String email,
       required String password,
-      String? username}) async {
-    final userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
-    return userCredential.credential!.token.toString();
+      required String username}) async {
+    final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    print('user id registered as ${userCredential.user?.uid}');
+    await FirebaseChatCore.instance.createUserInFirestore(
+        types.User(
+          firstName: username,
+          id: userCredential.user!.uid,
+          imageUrl: 'https://i.pravatar.cc/300?u=$email',
+          lastName: "",
+        ),
+      );
+    return (userCredential.credential?.token).toString();
   }
 
   @override
@@ -72,18 +90,22 @@ class AuthFirebaseImpl implements AuthRepoAbs {
   }
 
   @override
-  Future<UserEntity?> getUser()async {
+  Future<UserEntity?> getUser() async {
     final user = firebaseAuth.currentUser;
     log('final user $user');
     if (user != null) {
       return UserEntity(
         id: user.uid,
-        name: user.displayName ?? "",
-        photoUrl: user.photoURL ?? "",
+        firstName: user.displayName ?? "",
+        imageUrl: user.photoURL ?? "",
       );
-    }else{
+    } else {
       return null;
     }
   }
 
+  @override
+  Future logout() async {
+    return await firebaseAuth.signOut();
+  }
 }

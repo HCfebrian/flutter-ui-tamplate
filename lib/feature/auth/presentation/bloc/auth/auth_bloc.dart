@@ -14,7 +14,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.authUsecase}) : super(AuthInitial()) {
     on<AuthLoginEvent>(
       (event, emit) {
-        authUsecase.loginUser(email: event.email, password: event.password);
+        emit(AuthLoadingState());
+        try{
+          print("coba ");
+          authUsecase.loginUser(email: event.email, password: event.password);
+
+        }catch(e){
+          print("errornya ini" + e.toString());
+          emit(AuthErrorState(message: e.toString()));
+        }
       },
     );
 
@@ -24,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authUsecase.registerUser(
           email: event.email,
           password: event.password,
+          username: event.username
         );
         emit(AuthFinished());
       } else {
@@ -43,5 +52,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFinished());
       log("authFinished");
     });
+
+    on<AuthLogoutEvent>((event, emit) async{
+      emit(AuthInitial());
+      await authUsecase.logout();
+      emit(AuthFinished());
+      log("auth logout");
+    });
+
   }
 }

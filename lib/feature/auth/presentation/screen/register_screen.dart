@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/Widget/bezier_container.dart';
+import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 
 import 'package:simple_flutter/feature/auth/presentation/screen/login_screen.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key ?key, this.title}) : super(key: key);
+  const SignUpPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
@@ -13,6 +15,10 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  late TextEditingController tecUsername;
+  late TextEditingController tecEmail;
+  late TextEditingController tecPassword;
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -26,15 +32,21 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-            const Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)
+            const Text(
+              'Back',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(
+    String title,
+    TextEditingController textEditingController, {
+    bool isPassword = false,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -48,35 +60,53 @@ class _SignUpPageState extends State<SignUpPage> {
             height: 10,
           ),
           TextField(
-              obscureText: isPassword,
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true,),)
+            controller: textEditingController,
+            obscureText: isPassword,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              fillColor: Color(0xfff3f3f4),
+              filled: true,
+            ),
+          )
         ],
       ),
     );
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: () {
+        BlocProvider.of<AuthBloc>(context).add(
+          AuthRegisterEvent(
+            email: tecEmail.text,
+            password: tecPassword.text,
+            rePassword: tecPassword.text,
+            username: tecUsername.text,
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Colors.grey.shade200,
-                offset: const Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2,)
+              color: Colors.grey.shade200,
+              offset: const Offset(2, 4),
+              blurRadius: 5,
+              spreadRadius: 2,
+            )
           ],
           gradient: const LinearGradient(
-              colors: [Color(0xfffbb448), Color(0xfff7892b)],),),
-      child: const Text(
-        'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+            colors: [Color(0xfffbb448), Color(0xfff7892b)],
+          ),
+        ),
+        child: const Text(
+          'Register Now',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
       ),
     );
   }
@@ -85,7 +115,9 @@ class _SignUpPageState extends State<SignUpPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const LoginPage()),);
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 20),
@@ -104,9 +136,10 @@ class _SignUpPageState extends State<SignUpPage> {
             Text(
               'Login',
               style: TextStyle(
-                  color: Color(0xfff79c4f),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,),
+                color: Color(0xfff79c4f),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -118,30 +151,46 @@ class _SignUpPageState extends State<SignUpPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: const TextSpan(
-          text: '',
-          style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-              color: Color(0xffe46b10),
+        text: '',
+        style: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w700,
+          color: Color(0xffe46b10),
+        ),
+        children: [
+          TextSpan(
+            text: 'Login',
+            style: TextStyle(color: Colors.black, fontSize: 30),
           ),
-
-          children: [
-            TextSpan(
-              text: 'Login',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-          ],),
+        ],
+      ),
     );
   }
 
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField('Username'),
-        _entryField('Email id'),
-        _entryField('Password', isPassword: true),
+        _entryField('Username', tecUsername),
+        _entryField('Email', tecEmail),
+        _entryField('Password', tecPassword, isPassword: true),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    tecPassword = TextEditingController();
+    tecEmail = TextEditingController();
+    tecUsername = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tecPassword.dispose();
+    tecEmail.dispose();
+    tecUsername.dispose();
+    super.dispose();
   }
 
   @override

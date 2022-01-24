@@ -25,19 +25,30 @@ class ChatModel {
 class CustomCard extends StatelessWidget {
   final ChatModel chatModel;
   final ChatModel? sourchat;
+  final String imageUrl;
+  final String roomId;
 
-  const CustomCard({Key? key, required this.chatModel, this.sourchat})
-      : super(key: key);
+  const CustomCard({
+    Key? key,
+    required this.chatModel,
+    this.sourchat,
+    required this.imageUrl,
+    required this.roomId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("ini room id "+ roomId );
     return Column(
       children: [
         ListTile(
-          leading: const CircleAvatar(
+          leading: CircleAvatar(
             radius: 30,
             backgroundColor: Colors.blueGrey,
-            child: Icon(Icons.person),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: Image.network(imageUrl),
+            ),
           ),
           title: Text(
             chatModel.name,
@@ -48,16 +59,22 @@ class CustomCard extends StatelessWidget {
           ),
           subtitle: Row(
             children: [
-              const Icon(Icons.done_all),
+              // const Icon(Icons.done_all),
               const SizedBox(
                 width: 3,
               ),
-              Text(
-                chatModel.status,
-                style: const TextStyle(
-                  fontSize: 13,
-                ),
-              ),
+              // StreamBuilder<QuerySnapshot>(
+              //   stream: FirebaseFirestore.instance.collection("rooms").doc(roomId).collection("messages").snapshots(),
+              //   builder: (context, snapshot) {
+              //
+              //     return Text(
+              //       chatModel.status,
+              //       style: const TextStyle(
+              //         fontSize: 13,
+              //       ),
+              //     );
+              //   }
+              // )
             ],
           ),
           trailing: Text(chatModel.time),

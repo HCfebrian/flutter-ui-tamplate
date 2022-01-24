@@ -5,7 +5,7 @@ abstract class AuthRepoAbs {
   Future<String> registerUser({
     required final String email,
     required final String password,
-    final String? username,
+    required final String username,
   });
 
   Future<String> loginUser({
@@ -19,4 +19,7 @@ abstract class AuthRepoAbs {
   Future cancelRequest();
 
   Future<UserEntity?> getUser();
+
+  Future logout();
+
 }

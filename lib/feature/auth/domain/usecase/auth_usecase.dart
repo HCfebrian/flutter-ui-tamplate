@@ -13,10 +13,13 @@ class AuthUsecase {
   Future registerUser({
     required final String email,
     required final String password,
-    final String? username,
+    required final String username,
   }) async {
-    final String token =
-        await authRepo.registerUser(email: email, password: password);
+    final String token = await authRepo.registerUser(
+      email: email,
+      password: password,
+      username: username,
+    );
 
     return localPrefUsecase.saveAuthToken(token: token);
   }
@@ -29,12 +32,13 @@ class AuthUsecase {
     return localPrefUsecase.saveAuthToken(token: token);
   }
 
-  Future loginWithGoogle() async{
+  Future loginWithGoogle() async {
     authRepo.loginGoogleOauth();
     return;
   }
 
-  Future logout(){
+  Future logout() {
+    authRepo.logout();
     return localPrefUsecase.deleteAuthToken();
   }
 
