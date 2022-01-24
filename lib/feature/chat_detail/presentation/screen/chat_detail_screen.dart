@@ -141,15 +141,15 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: randomString(),
-      text: message.text,
-    );
+    // final textMessage = types.TextMessage(
+    //   author: _user,
+    //   createdAt: DateTime.now().millisecondsSinceEpoch,
+    //   id: randomString(),
+    //   text: message.text,
+    // );
 
     FirebaseChatCore.instance.sendMessage(
-      textMessage,
+      message,
       widget.room!.id,
     );
   }

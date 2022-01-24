@@ -9,4 +9,17 @@ class ChatUtilUsecase {
   Future registerUserChat({required UserEntity userEntity}) async {
     chatUserRepoAbs.registerUserChat(user: userEntity);
   }
+
+  static String getDisplayMessage(Map<dynamic, dynamic> map) {
+    switch (map['type']) {
+      case 'text':
+        return map['text'].toString();
+      case 'image':
+        return 'Image';
+      case 'file':
+        return 'File';
+      default:
+        return '';
+    }
+  }
 }

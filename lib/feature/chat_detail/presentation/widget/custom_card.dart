@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:simple_flutter/core/shared_feature/chat_util/domain/usecase/chat_util_usecase.dart';
 
 class ChatModel {
   String name;
@@ -63,18 +65,22 @@ class CustomCard extends StatelessWidget {
               const SizedBox(
                 width: 3,
               ),
-              // StreamBuilder<QuerySnapshot>(
-              //   stream: FirebaseFirestore.instance.collection("rooms").doc(roomId).collection("messages").snapshots(),
-              //   builder: (context, snapshot) {
-              //
-              //     return Text(
-              //       chatModel.status,
-              //       style: const TextStyle(
-              //         fontSize: 13,
-              //       ),
-              //     );
-              //   }
-              // )
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('rooms')
+                      .doc(roomId)
+                      .collection('messages')
+                      .orderBy("updatedAt")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    // print('mobile ${snapshot.data?.docs.last.data()}');
+                    return Text(
+                    ChatUtilUsecase.getDisplayMessage((snapshot.data?.docs.last.data() as Map)),
+                      style: const TextStyle(
+                        fontSize: 13,
+                      ),
+                    );
+                  })
             ],
           ),
           trailing: Text(chatModel.time),
