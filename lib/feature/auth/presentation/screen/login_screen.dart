@@ -21,8 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController emailTec;
   late TextEditingController passwordTec;
 
-
-
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -46,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, TextEditingController textEditingController, {bool isPassword = false}) {
+  Widget _entryField(String title, TextEditingController textEditingController,
+      {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -77,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: () {
         print("login");
-        BlocProvider.of<AuthBloc>(context).add(AuthLoginEvent(email: emailTec.text, password: passwordTec.text));
+        BlocProvider.of<AuthBloc>(context).add(
+            AuthLoginEvent(email: emailTec.text, password: passwordTec.text));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -289,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
               log("request get data");
               // BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
             }
-            if(state is AuthErrorState){
+            if (state is AuthErrorState) {
               print("error " + state.message);
             }
           },
@@ -300,7 +300,8 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushNamed(context, AppRoute.messagesList);
             }
             if (state is UserLoggedOutState) {
-              Navigator.pushNamedAndRemoveUntil(context, AppRoute.login, (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRoute.login, (route) => false);
             }
           },
         ),

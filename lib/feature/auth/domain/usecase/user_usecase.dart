@@ -19,4 +19,3 @@ class UserUsecase {
     return userRepoAbs.getUserDataStream();
   }
 }
-

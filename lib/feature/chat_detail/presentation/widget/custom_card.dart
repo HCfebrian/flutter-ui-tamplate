@@ -38,7 +38,7 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ini room id "+ roomId );
+    print("ini room id " + roomId);
     return Column(
       children: [
         ListTile(

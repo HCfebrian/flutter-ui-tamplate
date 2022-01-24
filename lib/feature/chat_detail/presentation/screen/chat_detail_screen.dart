@@ -5,13 +5,14 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -36,12 +37,6 @@ class _ChatDetailState extends State<ChatDetail> {
 
   final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
 
-  void _addMessage(types.Message message) {
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
-
   Future<void> _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
       var localPath = message.uri;
@@ -62,6 +57,7 @@ class _ChatDetailState extends State<ChatDetail> {
       await OpenFile.open(localPath);
     }
   }
+
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
@@ -107,7 +103,7 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-  void _handleFileSelection() async {
+  Future<void> _handleFileSelection() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
     );
@@ -153,7 +149,7 @@ class _ChatDetailState extends State<ChatDetail> {
     );
 
     FirebaseChatCore.instance.sendMessage(
-      message,
+      textMessage,
       widget.room!.id,
     );
   }
@@ -162,7 +158,7 @@ class _ChatDetailState extends State<ChatDetail> {
     final result = await ImagePicker().pickImage(
       imageQuality: 70,
       maxWidth: 1440,
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
     );
 
     if (result != null) {
@@ -177,7 +173,7 @@ class _ChatDetailState extends State<ChatDetail> {
         final reference = FirebaseStorage.instance.ref(name);
         await reference.putFile(file);
         final uri = await reference.getDownloadURL();
-        print("uri "+ uri);
+        print('uri $uri');
         final message = types.PartialImage(
           height: image.height.toDouble(),
           name: name,
@@ -191,10 +187,9 @@ class _ChatDetailState extends State<ChatDetail> {
           widget.room!.id,
         );
         _setAttachmentUploading(false);
-      }catch(e){
-        print("error dong"+ e.toString());
-      }
-      finally {
+      } catch (e) {
+        print('error image selection $e');
+      } finally {
         _setAttachmentUploading(false);
       }
     }

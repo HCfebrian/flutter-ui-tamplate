@@ -13,7 +13,6 @@ import 'package:simple_flutter/utils/route_generator.dart';
 
 import 'feature/auth/presentation/bloc/user/user_bloc.dart';
 
-
 Future<void> mainInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();

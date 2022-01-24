@@ -21,5 +21,4 @@ abstract class AuthRepoAbs {
   Future<UserEntity?> getUser();
 
   Future logout();
-
 }

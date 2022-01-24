@@ -8,7 +8,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 
-
 class AuthFirebaseImpl implements AuthRepoAbs {
   final FirebaseAuth firebaseAuth;
 
@@ -63,13 +62,13 @@ class AuthFirebaseImpl implements AuthRepoAbs {
     );
     print('user id registered as ${userCredential.user?.uid}');
     await FirebaseChatCore.instance.createUserInFirestore(
-        types.User(
-          firstName: username,
-          id: userCredential.user!.uid,
-          imageUrl: 'https://i.pravatar.cc/300?u=$email',
-          lastName: "",
-        ),
-      );
+      types.User(
+        firstName: username,
+        id: userCredential.user!.uid,
+        imageUrl: 'https://i.pravatar.cc/300?u=$email',
+        lastName: "",
+      ),
+    );
     return (userCredential.credential?.token).toString();
   }
 

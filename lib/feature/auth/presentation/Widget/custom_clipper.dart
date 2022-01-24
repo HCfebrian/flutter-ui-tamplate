@@ -14,14 +14,22 @@ class ClipPainter extends CustomClipper<Path> {
     /// [Top Left corner]
     const secondControlPoint = Offset.zero;
     final secondEndPoint = Offset(width * .2, height * .3);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy,);
+    path.quadraticBezierTo(
+      secondControlPoint.dx,
+      secondControlPoint.dy,
+      secondEndPoint.dx,
+      secondEndPoint.dy,
+    );
 
     /// [Left Middle]
     final fifthControlPoint = Offset(width * .3, height * .5);
     final fiftEndPoint = Offset(width * .23, height * .6);
-    path.quadraticBezierTo(fifthControlPoint.dx, fifthControlPoint.dy,
-        fiftEndPoint.dx, fiftEndPoint.dy,);
+    path.quadraticBezierTo(
+      fifthControlPoint.dx,
+      fifthControlPoint.dy,
+      fiftEndPoint.dx,
+      fiftEndPoint.dy,
+    );
 
     /// [Bottom Left corner]
     final thirdControlPoint = Offset(0, height);

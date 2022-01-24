@@ -26,7 +26,7 @@ class AuthRegisterEvent extends AuthEvent {
   final String rePassword;
   final String username;
 
-  const AuthRegisterEvent( {
+  const AuthRegisterEvent({
     required this.username,
     required this.email,
     required this.password,
@@ -46,12 +46,12 @@ class AuthCancelRequestEvent extends AuthEvent {
   List<Object?> get props => [];
 }
 
-class AuthLoginWithGoogleEvent extends AuthEvent{
+class AuthLoginWithGoogleEvent extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
 
-class AuthLogoutEvent extends AuthEvent{
+class AuthLogoutEvent extends AuthEvent {
   @override
   List<Object?> get props => [];
 }

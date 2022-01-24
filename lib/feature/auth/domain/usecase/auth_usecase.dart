@@ -45,5 +45,4 @@ class AuthUsecase {
   Future cancelRequest() {
     return authRepo.cancelRequest();
   }
-
 }

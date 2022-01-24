@@ -53,8 +53,7 @@ void initDepInject() {
     ),
   );
   getIt.registerLazySingleton(
-    () => ContactListUsecase(chatListRepo: getIt()
-    ),
+    () => ContactListUsecase(chatListRepo: getIt()),
   );
 
   // repo

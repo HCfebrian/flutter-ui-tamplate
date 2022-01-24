@@ -3,9 +3,8 @@ import 'package:simple_flutter/feature/chat_list/domain/entity/contact_entity.da
 
 class ContactEntityConverter {
   static ContactEntity fromDocument({required QueryDocumentSnapshot doc}) {
-    return ContactEntity(uid: doc['contact_id'].toString(),
+    return ContactEntity(
+        uid: doc['contact_id'].toString(),
         addOn: DateTime.parse(doc['added_on'].toDate().toString()));
   }
-
 }
-

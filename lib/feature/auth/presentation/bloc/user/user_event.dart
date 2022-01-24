@@ -20,5 +20,4 @@ class _UserGetUpdatedEvent extends UserEvent {
   List<Object?> get props => [userEntity];
 }
 
-
 class UserLoggedOutEvent extends UserEvent {}

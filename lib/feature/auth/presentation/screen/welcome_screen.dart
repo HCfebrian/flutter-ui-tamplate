@@ -24,15 +24,17 @@ class _WelcomePageState extends State<WelcomePage> {
         padding: const EdgeInsets.symmetric(vertical: 13),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: const Color(0xffdf8e33).withAlpha(100),
-                  offset: const Offset(2, 4),
-                  blurRadius: 8,
-                  spreadRadius: 2,)
-            ],
-            color: Colors.white,),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: const Color(0xffdf8e33).withAlpha(100),
+              offset: const Offset(2, 4),
+              blurRadius: 8,
+              spreadRadius: 2,
+            )
+          ],
+          color: Colors.white,
+        ),
         child: const Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Color(0xfff7892b)),
@@ -64,29 +66,28 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-
-
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: '',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+        text: '',
+        style: GoogleFonts.portLligatSans(
+          textStyle: Theme.of(context).textTheme.headline1,
+          fontSize: 30,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+        children: const [
+          TextSpan(
+            text: 'Login',
+            style: TextStyle(color: Colors.black, fontSize: 30),
           ),
-          children: const [
-            TextSpan(
-              text: 'Login',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            // TextSpan(
-            //   text: 'rnz',
-            //   style: TextStyle(color: Colors.white, fontSize: 30),
-            // ),
-          ],),
+          // TextSpan(
+          //   text: 'rnz',
+          //   style: TextStyle(color: Colors.white, fontSize: 30),
+          // ),
+        ],
+      ),
     );
   }
 
@@ -98,18 +99,21 @@ class _WelcomePageState extends State<WelcomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(5)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.shade200,
-                    offset: const Offset(2, 4),
-                    blurRadius: 5,
-                    spreadRadius: 2,)
-              ],
-              gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xfffbb448), Color(0xffe46b10)],),),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.grey.shade200,
+                offset: const Offset(2, 4),
+                blurRadius: 5,
+                spreadRadius: 2,
+              )
+            ],
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xfffbb448), Color(0xffe46b10)],
+            ),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

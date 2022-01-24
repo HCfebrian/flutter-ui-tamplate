@@ -20,7 +20,6 @@ class UserRepoImpl implements UserRepoAbs {
   Stream<UserEntity?> getUserDataStream() {
     userStream = StreamController();
     firebaseAuth.authStateChanges().listen((event) {
-
       if (event != null) {
         userStream.add(
           UserEntity(
@@ -29,8 +28,7 @@ class UserRepoImpl implements UserRepoAbs {
             imageUrl: event.photoURL ?? "",
           ),
         );
-      }
-      else {
+      } else {
         userStream.add(null);
       }
     });
