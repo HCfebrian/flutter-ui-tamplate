@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
@@ -43,11 +44,24 @@ class _ChatDetailState extends State<ChatDetail> {
 
   Future<void> _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
-      await OpenFile.open(message.uri);
-    }
-    return;
-  }
+      var localPath = message.uri;
 
+      if (message.uri.startsWith('http')) {
+        final client = http.Client();
+        final request = await client.get(Uri.parse(message.uri));
+        final bytes = request.bodyBytes;
+        final documentsDir = (await getApplicationDocumentsDirectory()).path;
+        localPath = '$documentsDir/${message.name}';
+
+        if (!File(localPath).existsSync()) {
+          final file = File(localPath);
+          await file.writeAsBytes(bytes);
+        }
+      }
+
+      await OpenFile.open(localPath);
+    }
+  }
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
@@ -157,19 +171,32 @@ class _ChatDetailState extends State<ChatDetail> {
       final size = file.lengthSync();
       final bytes = await result.readAsBytes();
       final image = await decodeImageFromList(bytes);
+      final name = result.name;
 
-      final message = types.ImageMessage(
-        author: _user,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        height: image.height.toDouble(),
-        id: randomString(),
-        name: result.name,
-        size: bytes.length,
-        uri: result.path,
-        width: image.width.toDouble(),
-      );
+      try {
+        final reference = FirebaseStorage.instance.ref(name);
+        await reference.putFile(file);
+        final uri = await reference.getDownloadURL();
+        print("uri "+ uri);
+        final message = types.PartialImage(
+          height: image.height.toDouble(),
+          name: name,
+          size: size,
+          uri: uri,
+          width: image.width.toDouble(),
+        );
 
-      _addMessage(message);
+        FirebaseChatCore.instance.sendMessage(
+          message,
+          widget.room!.id,
+        );
+        _setAttachmentUploading(false);
+      }catch(e){
+        print("error dong"+ e.toString());
+      }
+      finally {
+        _setAttachmentUploading(false);
+      }
     }
   }
 
