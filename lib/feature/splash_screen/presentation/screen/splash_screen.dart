@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_flutter/core/shared_feature/couchbase_service/couchbase_service.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscreen_bloc.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 

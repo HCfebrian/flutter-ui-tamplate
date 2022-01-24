@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
-import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
 import 'package:simple_flutter/feature/auth/presentation/Widget/bezier_container.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
@@ -20,6 +18,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late TextEditingController emailTec;
+  late TextEditingController passwordTec;
+
+
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -43,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title, TextEditingController textEditingController, {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -57,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
+            controller: textEditingController,
             obscureText: isPassword,
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -72,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacementNamed(context, AppRoute.messagesList);
+        print("login");
+        BlocProvider.of<AuthBloc>(context).add(AuthLoginEvent(email: emailTec.text, password: passwordTec.text));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -252,8 +257,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField('Email id'),
-        _entryField('Password', isPassword: true),
+        _entryField('Email id', emailTec),
+        _entryField('Password', passwordTec, isPassword: true),
       ],
     );
   }
@@ -261,7 +266,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     BlocProvider.of<UserBloc>(context).add(UserStataeStreamInitEvent());
+    emailTec = TextEditingController();
+    passwordTec = TextEditingController();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailTec.dispose();
+    passwordTec.dispose();
+    super.dispose();
   }
 
   @override
@@ -275,6 +289,9 @@ class _LoginPageState extends State<LoginPage> {
               log("request get data");
               // BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
             }
+            if(state is AuthErrorState){
+              print("error " + state.message);
+            }
           },
         ),
         BlocListener<UserBloc, UserState>(
@@ -283,7 +300,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushNamed(context, AppRoute.messagesList);
             }
             if (state is UserLoggedOutState) {
-              Navigator.pushNamed(context, AppRoute.login);
+              Navigator.pushNamedAndRemoveUntil(context, AppRoute.login, (route) => false);
             }
           },
         ),
@@ -310,17 +327,17 @@ class _LoginPageState extends State<LoginPage> {
                       _emailPasswordWidget(),
                       const SizedBox(height: 20),
                       _submitButton(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerRight,
-                        child: const Text(
-                          'Forgot Password ?',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.symmetric(vertical: 10),
+                      //   alignment: Alignment.centerRight,
+                      //   child: const Text(
+                      //     'Forgot Password ?',
+                      //     style: TextStyle(
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
                       _divider(),
                       _googleOauthButton(),
                       SizedBox(height: height * .055),

@@ -84,6 +84,12 @@ class AuthRepoImpl implements AuthRepoAbs {
     throw UnimplementedError();
   }
 
+  @override
+  Future logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
+
 
 
 }
