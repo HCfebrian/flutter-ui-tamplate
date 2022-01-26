@@ -29,7 +29,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           log('user now $user');
           emit(UserLoggedInState(userEntity: user));
         } else {
-          log('user loggout data $user');
+          log('user loggout data_source $user');
           emit(UserLoggedOutState());
         }
       },

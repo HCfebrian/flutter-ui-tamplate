@@ -12,14 +12,14 @@ class ChatUsecase{
 
   static String getDisplayMessage(Map<String, dynamic> map){
     switch(map['type']){
-      case "text":
-        return "put text here";
-      case "image":
-        return "Image";
-      case "file":
-        return "File";
+      case 'text':
+        return 'put text here';
+      case 'image':
+        return 'Image';
+      case 'file':
+        return 'File';
       default:
-        return "";
+        return '';
     }
   }
 }

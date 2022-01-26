@@ -31,7 +31,7 @@ class AuthRepoImpl implements AuthRepoAbs {
     final result =
         await dio.post('/login', data: data, cancelToken: cancelToken);
     //todo: change token response format
-    return result.data['data']['token'].toString();
+    return result.data['data_source']['token'].toString();
   }
 
   @override
@@ -57,7 +57,7 @@ class AuthRepoImpl implements AuthRepoAbs {
     final result =
         await dio.post('/register', data: data, cancelToken: cancelToken);
     //todo: change token response format
-    return result.data['data']['token'].toString();
+    return result.data['data_source']['token'].toString();
   }
 
   @override
@@ -71,7 +71,6 @@ class AuthRepoImpl implements AuthRepoAbs {
     throw UnimplementedError();
   }
 
-  @override
   Stream<UserEntity?> getUserStream() {
     // TODO: implement getUserStream
     throw UnimplementedError();

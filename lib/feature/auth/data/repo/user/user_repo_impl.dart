@@ -24,8 +24,8 @@ class UserRepoImpl implements UserRepoAbs {
         userStream.add(
           UserEntity(
             id: event.uid,
-            firstName: event.displayName ?? "",
-            imageUrl: event.photoURL ?? "",
+            firstName: event.displayName ?? '',
+            imageUrl: event.photoURL ?? '',
           ),
         );
       } else {

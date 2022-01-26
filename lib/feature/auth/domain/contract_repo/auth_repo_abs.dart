@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 
 abstract class AuthRepoAbs {

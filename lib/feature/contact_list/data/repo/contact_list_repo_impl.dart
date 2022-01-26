@@ -24,8 +24,11 @@ class ContactListRepoImpl implements ContactListRepoAbs {
         .listen((event) async {
       final List<ContactEntity> listContact = [];
       await Future.forEach(event.docs, (element) {
-        listContact.add(ContactEntityConverter.fromDocument(
-            doc: element as QueryDocumentSnapshot));
+        listContact.add(
+          ContactEntityConverter.fromDocument(
+            doc: element as QueryDocumentSnapshot,
+          ),
+        );
         return null;
       });
       userEntityStreamControl.add(listContact);

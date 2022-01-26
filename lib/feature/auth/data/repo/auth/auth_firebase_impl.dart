@@ -38,10 +38,11 @@ class AuthFirebaseImpl implements AuthRepoAbs {
   }
 
   @override
-  Future<String> loginUser(
-      {required String email,
-      required String password,
-      String? username}) async {
+  Future<String> loginUser({
+    required String email,
+    required String password,
+    String? username,
+  }) async {
     final userCredential = await firebaseAuth
         .signInWithEmailAndPassword(email: email, password: password)
         .onError((error, stackTrace) {
@@ -67,7 +68,7 @@ class AuthFirebaseImpl implements AuthRepoAbs {
         firstName: username,
         id: userCredential.user!.uid,
         imageUrl: 'https://i.pravatar.cc/300?u=$email',
-        lastName: "",
+        lastName: '',
       ),
     );
     return (userCredential.credential?.token).toString();
@@ -96,8 +97,8 @@ class AuthFirebaseImpl implements AuthRepoAbs {
     if (user != null) {
       return UserEntity(
         id: user.uid,
-        firstName: user.displayName ?? "",
-        imageUrl: user.photoURL ?? "",
+        firstName: user.displayName ?? '',
+        imageUrl: user.photoURL ?? '',
       );
     } else {
       return null;
@@ -106,6 +107,6 @@ class AuthFirebaseImpl implements AuthRepoAbs {
 
   @override
   Future logout() async {
-    return await firebaseAuth.signOut();
+    return  firebaseAuth.signOut();
   }
 }

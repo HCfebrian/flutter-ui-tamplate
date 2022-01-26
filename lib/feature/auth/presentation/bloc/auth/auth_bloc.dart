@@ -16,10 +16,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) {
         emit(AuthLoadingState());
         try {
-          print("coba ");
+          print('coba ');
           authUsecase.loginUser(email: event.email, password: event.password);
         } catch (e) {
-          print("errornya ini" + e.toString());
+          print('errornya ini$e');
           emit(AuthErrorState(message: e.toString()));
         }
       },
@@ -29,9 +29,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoadingState());
       if (event.password == event.rePassword) {
         await authUsecase.registerUser(
-            email: event.email,
-            password: event.password,
-            username: event.username);
+          email: event.email,
+          password: event.password,
+          username: event.username,
+        );
         emit(AuthFinished());
       } else {
         emit(const AuthErrorState(message: 'Password did not match'));
@@ -47,14 +48,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthInitial());
       await authUsecase.loginWithGoogle();
       emit(AuthFinished());
-      log("authFinished");
+      log('authFinished');
     });
 
     on<AuthLogoutEvent>((event, emit) async {
       emit(AuthInitial());
       await authUsecase.logout();
       emit(AuthFinished());
-      log("auth logout");
+      log('auth logout');
     });
   }
 }

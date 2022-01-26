@@ -33,14 +33,14 @@ class CustomCard extends StatelessWidget {
   const CustomCard({
     Key? key,
     required this.chatModel,
-    this.sourchat,
     required this.imageUrl,
     required this.roomId,
+    this.sourchat,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("ini room id " + roomId);
+    print('ini room id $roomId');
     return Column(
       children: [
         ListTile(
@@ -66,21 +66,24 @@ class CustomCard extends StatelessWidget {
                 width: 3,
               ),
               StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('rooms')
-                      .doc(roomId)
-                      .collection('messages')
-                      .orderBy("updatedAt")
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    // print('mobile ${snapshot.data?.docs.last.data()}');
-                    return Text(
-                    ChatUtilUsecase.getDisplayMessage((snapshot.data?.docs.last.data() as Map)),
-                      style: const TextStyle(
-                        fontSize: 13,
-                      ),
-                    );
-                  })
+                stream: FirebaseFirestore.instance
+                    .collection('rooms')
+                    .doc(roomId)
+                    .collection('messages')
+                    .orderBy('updatedAt')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  // print('mobile ${snapshot.data?.docs.last.data()}');
+                  return Text(
+                    ChatUtilUsecase.getDisplayMessage(
+                      (snapshot.data?.docs.last.data() as Map),
+                    ),
+                    style: const TextStyle(
+                      fontSize: 13,
+                    ),
+                  );
+                },
+              )
             ],
           ),
           trailing: Text(chatModel.time),

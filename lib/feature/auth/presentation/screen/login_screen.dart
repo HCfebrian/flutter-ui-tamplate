@@ -44,8 +44,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(String title, TextEditingController textEditingController,
-      {bool isPassword = false}) {
+  Widget _entryField(
+    String title,
+    TextEditingController textEditingController, {
+    bool isPassword = false,
+  }) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -75,9 +78,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return GestureDetector(
       onTap: () {
-        print("login");
+        print('login');
         BlocProvider.of<AuthBloc>(context).add(
-            AuthLoginEvent(email: emailTec.text, password: passwordTec.text));
+          AuthLoginEvent(email: emailTec.text, password: passwordTec.text),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -286,7 +290,7 @@ class _LoginPageState extends State<LoginPage> {
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFinished) {
-              log("request get data");
+              log("request get data_source");
               // BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
             }
             if (state is AuthErrorState) {

@@ -42,16 +42,17 @@ class UserEntity extends Equatable {
     this.updatedAt,
   });
 
-  UserEntity copyWith(
-      {String? id,
-      int? createdAt,
-      String? firstName,
-      String? imageUrl,
-      String? lastName,
-      int? lastSeen,
-      Map<String, dynamic>? metadata,
-      Role? role,
-      int? updatedAt}) {
+  UserEntity copyWith({
+    String? id,
+    int? createdAt,
+    String? firstName,
+    String? imageUrl,
+    String? lastName,
+    int? lastSeen,
+    Map<String, dynamic>? metadata,
+    Role? role,
+    int? updatedAt,
+  }) {
     return UserEntity(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
