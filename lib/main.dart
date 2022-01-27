@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
-import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscreen_bloc.dart';
 import 'package:simple_flutter/get_it.dart';
@@ -48,6 +49,9 @@ class MainApp extends StatelessWidget {
           create: (context) => getIt(),
         ),
         BlocProvider<ChatListBloc>(
+          create: (context) => getIt(),
+        ),
+        BlocProvider<ChatDetailStatusBloc>(
           create: (context) => getIt(),
         ),
       ],

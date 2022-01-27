@@ -22,7 +22,8 @@ import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dar
 import 'package:simple_flutter/feature/chat_detail/data/repo/chat_detail_repo_impl.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
-import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/data/repo/chat_list_repo_impl.dart';
 import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
 import 'package:simple_flutter/feature/chat_list/domain/usecase/chat_usecase.dart';
@@ -41,6 +42,7 @@ void initDepInject() {
   getIt.registerFactory(() => SplashScreenBloc(splashUsecase: getIt()));
   getIt.registerFactory(() => AuthBloc(authUsecase: getIt()));
   getIt.registerFactory(() => ChatDetailBloc(chatDetailUsecase: getIt()));
+  getIt.registerFactory(() => ChatDetailStatusBloc(chatDetailUsecase: getIt()));
   getIt.registerFactory(() => ChatListBloc(chatUsecase: getIt()));
   getIt.registerFactory(
     () => UserBloc(

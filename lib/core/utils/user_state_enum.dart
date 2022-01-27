@@ -1,25 +1,25 @@
-enum UserState { Offline, Online, Waiting }
+enum UserStates { Offline, Online, Waiting }
 
 class StateUtil {
-  static int stateToNum(UserState userStae) {
+  static int stateToNum(UserStates userStae) {
     switch (userStae) {
-      case UserState.Offline:
+      case UserStates.Offline:
         return 0;
-      case UserState.Online:
+      case UserStates.Online:
         return 1;
       default:
         return 2;
     }
   }
 
-  static UserState numToState(int number) {
+  static UserStates numToState(int number) {
     switch (number) {
       case 0:
-        return UserState.Offline;
+        return UserStates.Offline;
       case 1:
-        return UserState.Online;
+        return UserStates.Online;
       default:
-        return UserState.Waiting;
+        return UserStates.Waiting;
     }
   }
 }

@@ -14,7 +14,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
+import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -23,9 +26,16 @@ String randomString() {
 }
 
 class ChatDetail extends StatefulWidget {
-  final types.Room? room;
+  final types.Room room;
+  final String name;
+  final String myUserId;
 
-  const ChatDetail({Key? key, this.room}) : super(key: key);
+  const ChatDetail(
+      {Key? key,
+      required this.room,
+      required this.name,
+      required this.myUserId})
+      : super(key: key);
 
   @override
   State<ChatDetail> createState() => _ChatDetailState();
@@ -34,6 +44,7 @@ class ChatDetail extends StatefulWidget {
 class _ChatDetailState extends State<ChatDetail> {
   final List<types.Message> _messages = [];
   bool _isAttachmentUploading = false;
+  bool isBounch = false;
 
   final int _page = 0;
 
@@ -70,7 +81,7 @@ class _ChatDetailState extends State<ChatDetail> {
               BlocProvider.of<ChatDetailBloc>(context).add(
                 ChatDetailDeleteEvent(
                   message: message,
-                  room: widget.room!,
+                  room: widget.room,
                 ),
               );
               Navigator.pop(context);
@@ -83,6 +94,20 @@ class _ChatDetailState extends State<ChatDetail> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _handleOnTextChange(
+    String message,
+  ) async {
+    print("handle on change " + widget.room.toString());
+    print("handle on change " + widget.myUserId.toString());
+    BlocProvider.of<ChatDetailStatusBloc>(context).add(
+      ChatDetailChangeStatusTypingEvent(
+        chatStatus: ChatStatus.typing,
+        room: widget.room,
+        myUserId: widget.myUserId,
       ),
     );
   }
@@ -155,7 +180,7 @@ class _ChatDetailState extends State<ChatDetail> {
           uri: uri,
         );
 
-        FirebaseChatCore.instance.sendMessage(message, widget.room!.id);
+        FirebaseChatCore.instance.sendMessage(message, widget.room.id);
         _setAttachmentUploading(false);
       } finally {
         _setAttachmentUploading(false);
@@ -172,7 +197,7 @@ class _ChatDetailState extends State<ChatDetail> {
   void _handleSendPressed(types.PartialText message) {
     FirebaseChatCore.instance.sendMessage(
       message,
-      widget.room!.id,
+      widget.room.id,
     );
   }
 
@@ -206,7 +231,7 @@ class _ChatDetailState extends State<ChatDetail> {
 
         FirebaseChatCore.instance.sendMessage(
           message,
-          widget.room!.id,
+          widget.room.id,
         );
         _setAttachmentUploading(false);
       } catch (e) {
@@ -231,35 +256,18 @@ class _ChatDetailState extends State<ChatDetail> {
     });
   }
 
-  // Future<void> _handleEndReached() async {
-  //   final uri = Uri.parse(
-  //     'https://api.instantwebtools.net/v1/passenger?page=$_page&size=20',
-  //   );
-  //   final response = await http.get(uri);
-  //   final json = jsonDecode(response.body) as Map<String, dynamic>;
-  //   final data_source = json['data_source'] as List<dynamic>;
-  //   print(data_source);
-  //   final messages = data_source
-  //       .map(
-  //         (e) => types.TextMessage(
-  //           author: _user,
-  //           id: e['_id'] as String,
-  //           text: e['airline'].toString(),
-  //         ),
-  //       )
-  //       .toList();
-  //   setState(() {
-  //     _messages = [..._messages, ...messages];
-  //     _page = _page + 1;
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
     print('init dong');
     BlocProvider.of<ChatDetailBloc>(context)
-        .add(ChatDetailInitStreamEvent(widget.room!));
+        .add(ChatDetailInitStreamEvent(widget.room));
+    BlocProvider.of<ChatDetailStatusBloc>(context).add(
+      ChatDetailStatusStartStreamEvent(
+        room: widget.room,
+        myUserId: widget.myUserId,
+      ),
+    );
     // _handleEndReached();
   }
 
@@ -275,7 +283,28 @@ class _ChatDetailState extends State<ChatDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.name),
+            BlocBuilder<ChatDetailStatusBloc, ChatDetailStatusState>(
+              builder: (context, state) {
+                if (state is ChatDetailCurrentStatus) {
+                  if (state.chatStatus == ChatStatus.typing) {
+                    return const Text(
+                      'Typing...',
+                      style: TextStyle(fontSize: 10),
+                    );
+                  }
+                  if (state.chatStatus == ChatStatus.online) {
+                    return const Text('Online', style: TextStyle(fontSize: 10));
+                  }
+                }
+                return const SizedBox();
+              },
+            ),
+          ],
+        ),
       ),
       body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
         builder: (context, state) {
@@ -303,6 +332,7 @@ class _ChatDetailState extends State<ChatDetail> {
                 onPreviewDataFetched: _handlePreviewDataFetched,
                 onSendPressed: _handleSendPressed,
                 onMessageLongPress: _handleLongPress,
+                onTextChanged: _handleOnTextChange,
                 user: types.User(
                   id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
                 ),

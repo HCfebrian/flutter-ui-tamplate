@@ -11,6 +11,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   final FirebaseFirestore firestore;
   final FirebaseStorage firebaseStorage;
   StreamController<List<types.Message>>? messageStream;
+  StreamController<DateTime>? lastTypingStream;
 
   ChatDetailRepoImpl({
     required this.firestore,
@@ -49,7 +50,44 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   }
 
   @override
-  Future deleteFile({required types.FileMessage message, required types.Room room}) {
+  Future deleteFile(
+      {required types.FileMessage message, required types.Room room}) {
     return firebaseStorage.refFromURL(message.uri).delete();
+  }
+
+  @override
+  Future setTypingStatusDate(
+      {required DateTime date,
+      required types.Room room,
+      required String myUserId}) async {
+
+    firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .update({'isTyping-$myUserId': date});
+  }
+
+  @override
+  Stream<DateTime> startLastTypingStream({
+    required types.Room room,
+    required String otherUserId,
+  }) {
+    lastTypingStream?.close();
+    lastTypingStream = null;
+    lastTypingStream ??= StreamController();
+
+    firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .snapshots()
+        .listen((event) {
+      if (event.exists &&
+          event.data() != null &&
+          event.data()!['isTyping-$otherUserId'] != null) {
+        lastTypingStream!
+            .add((event.data()!['isTyping-$otherUserId'] as Timestamp).toDate());
+      }
+    });
+    return lastTypingStream!.stream;
   }
 }

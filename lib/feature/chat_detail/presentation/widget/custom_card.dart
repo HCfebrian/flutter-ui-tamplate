@@ -73,7 +73,12 @@ class CustomCard extends StatelessWidget {
                     .orderBy('updatedAt')
                     .snapshots(),
                 builder: (context, snapshot) {
-                  // print('mobile ${snapshot.data?.docs.last.data()}');
+
+                  print('mobile room id ${roomId}');
+
+                  if(snapshot.data?.docs.length == 0){
+                    return const SizedBox();
+                  }
                   return Text(
                     ChatUtilUsecase.getDisplayMessage(
                       (snapshot.data?.docs.last.data() as Map),

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -31,5 +32,16 @@ class ChatUserRepoImpl implements ChatUserRepoAbs {
           ).toJson(),
         );
     return;
+  }
+
+  @override
+  Future<types.User?> getUserById({required String userId}) async {
+    final userFinal =
+        await firebaseFirestore.collection(USER_COLLECTION).doc(userId).get();
+    try {
+      return types.User.fromJson(userFinal.data()!);
+    } catch (e) {
+      return null;
+    }
   }
 }

@@ -17,7 +17,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
       : super(ChatDetailInitial()) {
     on<ChatDetailInitStreamEvent>(
       (event, emit) {
-        add(ChatDetailDisplayMessageEvent(listMessage: []));
+        add(const ChatDetailDisplayMessageEvent(listMessage: []));
         if (subscription != null) {
           subscription!.cancel();
           subscription = null;

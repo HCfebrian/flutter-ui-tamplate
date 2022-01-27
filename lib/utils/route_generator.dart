@@ -7,6 +7,7 @@ import 'package:simple_flutter/feature/auth/presentation/screen/welcome_screen.d
 import 'package:simple_flutter/feature/chat_detail/presentation/screen/chat_detail_screen.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/screen/splash_screen.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,7 +30,13 @@ class RouteGenerator {
         return routeTransition(const WelcomePage());
 
       case AppRoute.detailChat:
-        return routeTransition(const ChatDetail());
+        return routeTransition(
+          ChatDetail(
+            name: ((settings.arguments! as Map)['name']).toString(),
+            room: (settings.arguments! as Map)['room'] as types.Room,
+            myUserId: ((settings.arguments! as Map)['myUserId']).toString(),
+          ),
+        );
       default:
         return routeTransition(const NotFoundScreen());
     }
