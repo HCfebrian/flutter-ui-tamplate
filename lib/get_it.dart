@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_flutter/core/shared_feature/chat_util/data/repo/chat_user_repo_impl.dart';
@@ -76,7 +77,7 @@ void initDepInject() {
   // repo
 
   getIt.registerLazySingleton<ChatDetailRepoAbs>(
-    () => ChatDetailRepoImpl(),
+    () => ChatDetailRepoImpl(firestore: getIt(), firebaseStorage: getIt()),
   );
   getIt.registerLazySingleton<ChatListRepoAbs>(
     () => ChatListRepoImpl(
@@ -126,6 +127,7 @@ void initDepInject() {
 
   getIt.registerLazySingleton(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => FirebaseFirestore.instance);
+  getIt.registerLazySingleton(() => FirebaseStorage.instance);
   // getIt.registerLazySingleton(
   //       () => Dio(
   //     BaseOptions(baseUrl: FlavorConfig.instance.values.baseUrl),

@@ -58,28 +58,30 @@ class MessagesList extends StatelessWidget {
               itemBuilder: (context, i) {
                 return GestureDetector(
                   onLongPress: () {
-                    showDialog(context: context,
-                      builder: (context) =>
-                          AlertDialog(
-                            title: const Text('Delete message?'),
-                            actions: [
-                              GestureDetector(
-                                child: const Text('delete'),
-                                onTap: () {
-                                  BlocProvider.of<ChatListBloc>(context).add(
-                                    ChatListDeleteRoomEvent(
-                                      room: snapshot.data![i],),);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              GestureDetector(
-                                child: const Text('close'),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Delete message?'),
+                        actions: [
+                          GestureDetector(
+                            child: const Text('delete'),
+                            onTap: () {
+                              BlocProvider.of<ChatListBloc>(context).add(
+                                ChatListDeleteRoomEvent(
+                                  room: snapshot.data![i],
+                                ),
+                              );
+                              Navigator.pop(context);
+                            },
                           ),
+                          GestureDetector(
+                            child: const Text('close'),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
                     );
                   },
                   onTap: () {
@@ -87,10 +89,9 @@ class MessagesList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ChatDetail(
-                              room: snapshot.data![i],
-                            ),
+                        builder: (context) => ChatDetail(
+                          room: snapshot.data![i],
+                        ),
                       ),
                     );
                   },
@@ -99,7 +100,7 @@ class MessagesList extends StatelessWidget {
                     chatModel: ChatModel(
                       name: snapshot.data![i].name ?? '',
                       status: snapshot.data![i].lastMessages?.last.status
-                          .toString() ??
+                              .toString() ??
                           '',
                     ),
                     roomId: snapshot.data![i].id,

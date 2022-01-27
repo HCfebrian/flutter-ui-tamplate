@@ -15,8 +15,6 @@ import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
-import 'package:bubble/bubble.dart';
-
 
 String randomString() {
   final random = Random.secure();
@@ -68,7 +66,15 @@ class _ChatDetailState extends State<ChatDetail> {
         actions: [
           GestureDetector(
             child: const Text('delete'),
-            onTap: () {},
+            onTap: () {
+              BlocProvider.of<ChatDetailBloc>(context).add(
+                ChatDetailDeleteEvent(
+                  message: message,
+                  room: widget.room!,
+                ),
+              );
+              Navigator.pop(context);
+            },
           ),
           GestureDetector(
             child: const Text('close'),

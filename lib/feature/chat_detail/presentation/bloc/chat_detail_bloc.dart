@@ -42,5 +42,11 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         emit(ChatDetailLoadedState(listMessage: event.listMessage));
       },
     );
+
+    on<ChatDetailDeleteEvent>(
+          (event, emit) {
+            chatDetailUsecase.deleteMessage(message: event.message, room: event.room);
+      },
+    );
   }
 }

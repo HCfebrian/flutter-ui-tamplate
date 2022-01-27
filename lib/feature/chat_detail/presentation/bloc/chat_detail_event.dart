@@ -31,3 +31,16 @@ class ChatDetailDisposeEvent extends ChatDetailEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ChatDetailDeleteEvent extends ChatDetailEvent {
+  final types.Message message;
+  final types.Room room;
+
+  const ChatDetailDeleteEvent({
+    required this.message,
+    required this.room,
+  });
+
+  @override
+  List<Object?> get props => [message];
+}
