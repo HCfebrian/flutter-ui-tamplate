@@ -1,14 +1,12 @@
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
 
+
 class ChatUsecase{
-  final ChatRepo chatListRepoAbs;
+  final ChatListRepoAbs chatListRepoAbs;
 
   ChatUsecase({required this.chatListRepoAbs});
 
-  // Stream<String> getLastMessage(){
-  //   chatListRepoAbs.getMessageStream().listen((event) {
-  //   });
-  // }
 
   static String getDisplayMessage(Map<String, dynamic> map){
     switch(map['type']){
@@ -22,4 +20,10 @@ class ChatUsecase{
         return '';
     }
   }
+
+
+  Future deleteRoom(types.Room room) async{
+    chatListRepoAbs.deleteRoom(room: room);
+  }
+
 }

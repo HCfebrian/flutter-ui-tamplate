@@ -22,6 +22,10 @@ import 'package:simple_flutter/feature/chat_detail/data/repo/chat_detail_repo_im
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
+import 'package:simple_flutter/feature/chat_list/data/repo/chat_list_repo_impl.dart';
+import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
+import 'package:simple_flutter/feature/chat_list/domain/usecase/chat_usecase.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
 import 'package:simple_flutter/feature/contact_list/data/repo/contact_list_repo_impl.dart';
 import 'package:simple_flutter/feature/contact_list/domain/contract_repo/contact_list_repo_abs.dart';
 import 'package:simple_flutter/feature/contact_list/domain/usecase/contact_list_usecase.dart';
@@ -36,6 +40,7 @@ void initDepInject() {
   getIt.registerFactory(() => SplashScreenBloc(splashUsecase: getIt()));
   getIt.registerFactory(() => AuthBloc(authUsecase: getIt()));
   getIt.registerFactory(() => ChatDetailBloc(chatDetailUsecase: getIt()));
+  getIt.registerFactory(() => ChatListBloc(chatUsecase: getIt()));
   getIt.registerFactory(
     () => UserBloc(
       authUsecase: getIt(),
@@ -47,7 +52,9 @@ void initDepInject() {
   //UseCase
 
   getIt.registerLazySingleton(() => SplashUsecase());
-  getIt.registerLazySingleton(() => ChatDetailUsecase(chatDetailRepoAbs: getIt()));
+  getIt.registerLazySingleton(() => ChatUsecase(chatListRepoAbs: getIt()));
+  getIt.registerLazySingleton(
+      () => ChatDetailUsecase(chatDetailRepoAbs: getIt()));
   getIt.registerLazySingleton(() => ChatUtilUsecase(chatUserRepoAbs: getIt()));
   getIt.registerLazySingleton(
     () => AuthUsecase(
@@ -70,6 +77,11 @@ void initDepInject() {
 
   getIt.registerLazySingleton<ChatDetailRepoAbs>(
     () => ChatDetailRepoImpl(),
+  );
+  getIt.registerLazySingleton<ChatListRepoAbs>(
+    () => ChatListRepoImpl(
+      firestore: getIt(),
+    ),
   );
   getIt.registerLazySingleton<ChatUserRepoAbs>(
     () => ChatUserRepoImpl(firebaseFirestore: getIt()),

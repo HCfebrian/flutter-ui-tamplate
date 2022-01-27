@@ -7,6 +7,7 @@ import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/screen/chat_detail_screen.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/widget/custom_card.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
 
 class MessagesList extends StatelessWidget {
@@ -56,14 +57,40 @@ class MessagesList extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, i) {
                 return GestureDetector(
+                  onLongPress: () {
+                    showDialog(context: context,
+                      builder: (context) =>
+                          AlertDialog(
+                            title: const Text('Delete message?'),
+                            actions: [
+                              GestureDetector(
+                                child: const Text('delete'),
+                                onTap: () {
+                                  BlocProvider.of<ChatListBloc>(context).add(
+                                    ChatListDeleteRoomEvent(
+                                      room: snapshot.data![i],),);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              GestureDetector(
+                                child: const Text('close'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                    );
+                  },
                   onTap: () {
                     log('onTap ${snapshot.data?[i].name}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatDetail(
-                          room: snapshot.data![i],
-                        ),
+                        builder: (context) =>
+                            ChatDetail(
+                              room: snapshot.data![i],
+                            ),
                       ),
                     );
                   },
@@ -72,7 +99,7 @@ class MessagesList extends StatelessWidget {
                     chatModel: ChatModel(
                       name: snapshot.data![i].name ?? '',
                       status: snapshot.data![i].lastMessages?.last.status
-                              .toString() ??
+                          .toString() ??
                           '',
                     ),
                     roomId: snapshot.data![i].id,

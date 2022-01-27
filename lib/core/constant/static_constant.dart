@@ -13,6 +13,7 @@ class StaticConstant {
 
 const MESSAGE_COLLECTION = 'messages';
 const USER_COLLECTION = 'users';
+const ROOM_COLLECTION = 'rooms';
 const CALL_COLLECTION = 'call';
 const CONTACT_COLLECTION = 'contact';
 

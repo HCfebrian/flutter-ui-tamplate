@@ -15,6 +15,8 @@ import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_bloc.dart';
+import 'package:bubble/bubble.dart';
+
 
 String randomString() {
   final random = Random.secure();
@@ -56,6 +58,27 @@ class _ChatDetailState extends State<ChatDetail> {
 
       await OpenFile.open(localPath);
     }
+  }
+
+  Future<void> _handleLongPress(types.Message message) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete message?'),
+        actions: [
+          GestureDetector(
+            child: const Text('delete'),
+            onTap: () {},
+          ),
+          GestureDetector(
+            child: const Text('close'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   void _handleAtachmentPressed() {
@@ -229,14 +252,15 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     print('init dong');
-    BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailInitStreamEvent(widget.room!));
+    BlocProvider.of<ChatDetailBloc>(context)
+        .add(ChatDetailInitStreamEvent(widget.room!));
     // _handleEndReached();
   }
 
   @override
   void dispose() {
     print('should be dispose');
-    BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailDisposeEvent());
+    // BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailDisposeEvent());
     print('should be dispose dong');
     super.dispose();
   }
@@ -247,50 +271,39 @@ class _ChatDetailState extends State<ChatDetail> {
       appBar: AppBar(
         title: const Text('Chat'),
       ),
-      body: StreamBuilder<types.Room>(
-        initialData: widget.room,
-        // stream: FirebaseChatCore.instance.room(widget.room!.id),
-        builder: (context, snapshot) {
-          return StreamBuilder<List<types.Message>>(
-            initialData: const [],
-            // stream: FirebaseChatCore.instance.messages(snapshot.data!),
-            builder: (context, snapshot) {
-              return BlocBuilder<ChatDetailBloc, ChatDetailState>(
-                builder: (context, state) {
-                  if (state is ChatDetailErrorState) {
-                    return const Expanded(
-                      child: Center(
-                        child: Text('Error'),
-                      ),
-                    );
-                  }
-                  if (state is ChatDetailLoadingState) {
-                    print('show loading state');
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (state is ChatDetailLoadedState) {
-                    return SafeArea(
-                      bottom: false,
-                      child: Chat(
-                        isAttachmentUploading: _isAttachmentUploading,
-                        messages: state.listMessage,
-                        onAttachmentPressed: _handleAtachmentPressed,
-                        onMessageTap: _handleMessageTap,
-                        onPreviewDataFetched: _handlePreviewDataFetched,
-                        onSendPressed: _handleSendPressed,
-                        user: types.User(
-                          id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                        ),
-                      ),
-                    );
-                  }
-                  return Container();
-                },
-              );
-            },
-          );
+      body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
+        builder: (context, state) {
+          if (state is ChatDetailErrorState) {
+            return const Expanded(
+              child: Center(
+                child: Text('Error'),
+              ),
+            );
+          }
+          if (state is ChatDetailLoadingState) {
+            print('show loading state');
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ChatDetailLoadedState) {
+            return SafeArea(
+              bottom: false,
+              child: Chat(
+                isAttachmentUploading: _isAttachmentUploading,
+                messages: state.listMessage,
+                onAttachmentPressed: _handleAtachmentPressed,
+                onMessageTap: _handleMessageTap,
+                onPreviewDataFetched: _handlePreviewDataFetched,
+                onSendPressed: _handleSendPressed,
+                onMessageLongPress: _handleLongPress,
+                user: types.User(
+                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                ),
+              ),
+            );
+          }
+          return Container();
         },
       ),
     );
