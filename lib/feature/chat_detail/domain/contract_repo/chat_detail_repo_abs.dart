@@ -20,5 +20,15 @@ abstract class ChatDetailRepoAbs {
     required String myUserId,
   });
 
-  Stream<DateTime> startLastTypingStream({required types.Room room, required String otherUserId});
+  Stream<DateTime> startLastTypingStream(
+      {required types.Room room, required String otherUserId});
+
+  Future markAsRead({
+    required types.Message message,
+    required types.Room room,
+  });
+  Future markAsDelivered({
+    required types.Message message,
+    required types.Room room,
+  });
 }

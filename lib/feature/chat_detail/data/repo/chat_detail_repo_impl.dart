@@ -60,7 +60,6 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
       {required DateTime date,
       required types.Room room,
       required String myUserId}) async {
-
     firestore
         .collection(ROOM_COLLECTION)
         .doc(room.id)
@@ -84,10 +83,31 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
       if (event.exists &&
           event.data() != null &&
           event.data()!['isTyping-$otherUserId'] != null) {
-        lastTypingStream!
-            .add((event.data()!['isTyping-$otherUserId'] as Timestamp).toDate());
+        lastTypingStream!.add(
+            (event.data()!['isTyping-$otherUserId'] as Timestamp).toDate());
       }
     });
     return lastTypingStream!.stream;
+  }
+
+  @override
+  Future markAsRead(
+      {required types.Message message, required types.Room room}) {
+    return firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .collection(MESSAGE_COLLECTION)
+        .doc(message.id)
+        .update({"status": types.Status.seen.name});
+  }
+
+  @override
+  Future markAsDelivered({required types.Message message, required types.Room room}) {
+    return firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .collection(MESSAGE_COLLECTION)
+        .doc(message.id)
+        .update({"status": types.Status.delivered.name});
   }
 }

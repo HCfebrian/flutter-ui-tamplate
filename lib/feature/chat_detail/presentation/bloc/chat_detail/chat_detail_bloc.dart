@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
 
@@ -11,26 +12,46 @@ part 'chat_detail_state.dart';
 
 class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
   final ChatDetailUsecase chatDetailUsecase;
-  StreamSubscription? subscription;
+  StreamSubscription? chatStream;
 
   ChatDetailBloc({required this.chatDetailUsecase})
       : super(ChatDetailInitial()) {
     on<ChatDetailInitStreamEvent>(
       (event, emit) {
         add(const ChatDetailDisplayMessageEvent(listMessage: []));
-        if (subscription != null) {
-          subscription!.cancel();
-          subscription = null;
+        if (chatStream != null) {
+          chatStream!.cancel();
+          chatStream = null;
           print("sub empty");
         }
-        subscription = chatDetailUsecase.initStream(event.room).listen((event) {
-          add(ChatDetailDisplayMessageEvent(listMessage: event));
+        final meUser = FirebaseAuth.instance.currentUser;
+        chatStream = chatDetailUsecase.initStream(event.room).listen((messages) {
+          messages.forEach(
+            (element) {
+              if (element.status != types.Status.seen &&
+                  element.author.id != meUser!.uid) {
+                print("change status");
+                chatDetailUsecase.markAsRead(
+                    message: element, room: event.room);
+              } else if (element.author.id == meUser!.uid &&
+                  element.status != types.Status.seen) {
+                chatDetailUsecase.markAsDelivered(
+                    message: element, room: event.room);
+              }
+            },
+          );
+          add(ChatDetailDisplayMessageEvent(listMessage: messages));
         });
       },
     );
 
     on<ChatDetailDisposeEvent>(
       (event, emit) {
+        if (chatStream != null) {
+          chatStream!.cancel();
+          chatStream = null;
+          print("sub empty");
+        }
         print("dispose message");
       },
     );
@@ -44,8 +65,18 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     );
 
     on<ChatDetailDeleteEvent>(
-          (event, emit) {
-            chatDetailUsecase.deleteMessage(message: event.message, room: event.room);
+      (event, emit) {
+        chatDetailUsecase.deleteMessage(
+            message: event.message, room: event.room);
+      },
+    );
+
+    on<ChatMarkAsReadEvent>(
+      (event, emit) {
+        chatDetailUsecase.markAsRead(
+          message: event.message,
+          room: event.room,
+        );
       },
     );
   }

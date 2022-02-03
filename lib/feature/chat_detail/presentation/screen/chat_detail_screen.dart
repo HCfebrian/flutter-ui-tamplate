@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,7 @@ class _ChatDetailState extends State<ChatDetail> {
   final List<types.Message> _messages = [];
   bool _isAttachmentUploading = false;
   bool isBounch = false;
+  late ChatDetailBloc chatDetailBloc;
 
   final int _page = 0;
 
@@ -192,7 +194,8 @@ class _ChatDetailState extends State<ChatDetail> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  void _handleSendPressed(types.PartialText message) async{
+    Map<String, dynamic> map = {};
     FirebaseChatCore.instance.sendMessage(
       message,
       widget.room.id,
@@ -258,6 +261,7 @@ class _ChatDetailState extends State<ChatDetail> {
   void initState() {
     super.initState();
     print('init dong');
+    chatDetailBloc = BlocProvider.of<ChatDetailBloc>(context);
     BlocProvider.of<ChatDetailBloc>(context)
         .add(ChatDetailInitStreamEvent(widget.room));
     BlocProvider.of<ChatDetailStatusBloc>(context).add(
@@ -266,13 +270,13 @@ class _ChatDetailState extends State<ChatDetail> {
         myUserId: widget.myUserId,
       ),
     );
-    // _handleEndReached();
   }
 
   @override
   void dispose() {
     print('should be dispose');
-    // BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailDisposeEvent());
+    // BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailInitStreamEvent(widget.room));
+    chatDetailBloc.add(const ChatDetailDisposeEvent());
     print('should be dispose dong');
     super.dispose();
   }

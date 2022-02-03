@@ -60,12 +60,20 @@ class ChatDetailUsecase {
     }
   }
 
+  Future markAsRead({required types.Message message, required types.Room room}){
+    return chatDetailRepoAbs.markAsRead(message: message, room: room);
+  }
+
+  Future markAsDelivered({required types.Message message, required types.Room room}){
+    return chatDetailRepoAbs.markAsDelivered(message: message, room: room);
+  }
+
   Future typingStatus({
     required types.Room room,
     required String myUserId,
   }) async {
     if (!isTyping) {
-      print("typing bosku "+ myUserId.toString());
+      print("typing bosku " + myUserId.toString());
       isTyping = true;
       chatDetailRepoAbs.setTypingStatusDate(
         date: DateTime.now(),
@@ -87,7 +95,8 @@ class ChatDetailUsecase {
     statusStream?.close();
     statusStream = null;
     statusStream ??= StreamController();
-    chatDetailRepoAbs.startLastTypingStream(room: room, otherUserId: otherUserId).listen((event) {
+    chatDetailRepoAbs.startLastTypingStream(
+        room: room, otherUserId: otherUserId).listen((event) {
       final now = DateTime.now();
       if (now.difference(event) <
           const Duration(seconds: TYPING_DEBAUCE_DURATION)) {
