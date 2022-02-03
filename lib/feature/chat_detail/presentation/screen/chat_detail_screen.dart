@@ -48,6 +48,9 @@ class _ChatDetailState extends State<ChatDetail> {
 
   final int _page = 0;
 
+  Future _handleOnReachEnd() async{
+  }
+
   Future<void> _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
       var localPath = message.uri;
@@ -335,6 +338,7 @@ class _ChatDetailState extends State<ChatDetail> {
                 onSendPressed: _handleSendPressed,
                 onMessageLongPress: _handleLongPress,
                 onTextChanged: _handleOnTextChange,
+                onEndReached: _handleOnReachEnd,
                 user: types.User(
                   id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
                 ),

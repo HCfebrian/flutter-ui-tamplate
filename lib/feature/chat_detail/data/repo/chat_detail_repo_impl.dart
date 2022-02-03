@@ -23,7 +23,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream?.close();
     messageStream = null;
     messageStream ??= StreamController();
-    FirebaseChatCore.instance.messages(room).listen((event) {
+    FirebaseChatCore.instance.messages(room,).listen((event) {
       messageStream!.add(event);
     });
     return messageStream!.stream;

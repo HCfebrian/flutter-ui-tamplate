@@ -70,13 +70,13 @@ class CustomCard extends StatelessWidget {
                     .collection('rooms')
                     .doc(roomId)
                     .collection('messages')
-                    .orderBy('updatedAt')
+                    .orderBy('updatedAt', descending: true)
+                    .limit(1)
                     .snapshots(),
                 builder: (context, snapshot) {
-
                   print('mobile room id ${roomId}');
 
-                  if(snapshot.data?.docs.length == 0){
+                  if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
                   }
                   return Text(
