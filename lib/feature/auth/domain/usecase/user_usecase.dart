@@ -11,6 +11,10 @@ class UserUsecase {
     required this.authRepoAbs,
   });
 
+  Future<void> init() async {
+     authRepoAbs.initService();
+  }
+
   Future<UserEntity?> getUserData() async {
     return authRepoAbs.getUser();
   }

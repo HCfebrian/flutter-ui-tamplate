@@ -87,4 +87,10 @@ class AuthRepoImpl implements AuthRepoAbs {
     // TODO: implement logout
     throw UnimplementedError();
   }
+
+  @override
+  Stream<UserEntity> initService() {
+    // TODO: implement initService
+    throw UnimplementedError();
+  }
 }

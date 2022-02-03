@@ -40,7 +40,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       await authUsecase.logout();
       emit(UserLoggedOutState());
     });
-    on<UserStataeStreamInitEvent>(
+    on<UserStateStreamInitEvent>(
       (event, emit) async {
         userUsecase.getUserDataStream().listen(
           (event) {

@@ -15,6 +15,7 @@ class AuthFirebaseImpl implements AuthRepoAbs {
 
   AuthFirebaseImpl({required this.firebaseAuth});
 
+  @override
   Stream<UserEntity> initService() {
     streamUserEntity = StreamController<UserEntity>();
     FirebaseAuth.instance.authStateChanges().listen((event) {
@@ -76,6 +77,7 @@ class AuthFirebaseImpl implements AuthRepoAbs {
 
   @override
   Future loginGoogleOauth() async {
+    print("login google o auth");
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
@@ -87,7 +89,15 @@ class AuthFirebaseImpl implements AuthRepoAbs {
       idToken: googleAuth?.idToken,
     );
     // Once signed in, return the UserCredential
-    return firebaseAuth.signInWithCredential(credential);
+    final result = await firebaseAuth.signInWithCredential(credential);
+    FirebaseChatCore.instance.createUserInFirestore(types.User(
+      firstName: result.user!.displayName,
+      id: result.user!.uid,
+      imageUrl: result.user!.photoURL,
+      lastName: '',
+
+    ));
+    return result;
   }
 
   @override
@@ -107,6 +117,7 @@ class AuthFirebaseImpl implements AuthRepoAbs {
 
   @override
   Future logout() async {
+    GoogleSignIn().signOut();
     return  firebaseAuth.signOut();
   }
 }

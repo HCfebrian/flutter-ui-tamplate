@@ -9,7 +9,7 @@ abstract class UserEvent extends Equatable {
 
 class UserGetDataEvent extends UserEvent {}
 
-class UserStataeStreamInitEvent extends UserEvent {}
+class UserStateStreamInitEvent extends UserEvent {}
 
 class _UserGetUpdatedEvent extends UserEvent {
   final UserEntity? userEntity;

@@ -18,6 +18,6 @@ abstract class AuthRepoAbs {
   Future cancelRequest();
 
   Future<UserEntity?> getUser();
-
+  Stream<UserEntity> initService();
   Future logout();
 }

@@ -269,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    BlocProvider.of<UserBloc>(context).add(UserStataeStreamInitEvent());
+    BlocProvider.of<UserBloc>(context).add(UserStateStreamInitEvent());
     emailTec = TextEditingController();
     passwordTec = TextEditingController();
     super.initState();
@@ -291,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
           listener: (context, state) {
             if (state is AuthFinished) {
               log("request get data_source");
-              // BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
+              BlocProvider.of<UserBloc>(context).add(UserGetDataEvent());
             }
             if (state is AuthErrorState) {
               print("error " + state.message);
