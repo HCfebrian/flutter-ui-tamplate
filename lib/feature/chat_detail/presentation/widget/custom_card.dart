@@ -60,11 +60,8 @@ class CustomCard extends StatelessWidget {
             ),
           ),
           subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // const Icon(Icons.done_all),
-              const SizedBox(
-                width: 3,
-              ),
               StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('rooms')
@@ -88,7 +85,42 @@ class CustomCard extends StatelessWidget {
                     ),
                   );
                 },
-              )
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('rooms')
+                    .doc(roomId)
+                    .collection('messages')
+                    .orderBy('updatedAt', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  print('mobile room id ${roomId}');
+                  if (snapshot.data?.docs.length == 0) {
+                    return const SizedBox();
+                  }
+                  final count = ChatUtilUsecase.getUnreadCount(
+                    snapshot.data!.docs,
+                  );
+                  if(count == '0'){
+                    return const SizedBox();
+                  }
+                  return Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.green),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        count,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           trailing: Text(chatModel.time),

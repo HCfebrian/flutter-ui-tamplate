@@ -23,7 +23,11 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream?.close();
     messageStream = null;
     messageStream ??= StreamController();
-    FirebaseChatCore.instance.messages(room,).listen((event) {
+    FirebaseChatCore.instance
+        .messages(
+      room,
+    )
+        .listen((event) {
       messageStream!.add(event);
     });
     return messageStream!.stream;
@@ -92,7 +96,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
 
   @override
   Future markAsRead(
-      {required types.Message message, required types.Room room}) {
+      {required types.Message message, required types.Room room}) async {
     return firestore
         .collection(ROOM_COLLECTION)
         .doc(room.id)
@@ -102,12 +106,13 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   }
 
   @override
-  Future markAsDelivered({required types.Message message, required types.Room room}) {
+  Future markAsDelivered(
+      {required types.Message message, required types.Room room}) async {
     return firestore
         .collection(ROOM_COLLECTION)
         .doc(room.id)
         .collection(MESSAGE_COLLECTION)
         .doc(message.id)
-        .update({"status": types.Status.delivered.name});
+        .update({'status': types.Status.delivered.name});
   }
 }
