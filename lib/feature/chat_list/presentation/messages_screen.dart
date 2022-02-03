@@ -6,7 +6,6 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
-import 'package:simple_flutter/feature/chat_detail/presentation/screen/chat_detail_screen.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/widget/custom_card.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
@@ -29,7 +28,11 @@ class _MessagesListState extends State<MessagesList> {
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if(state is UserLoggedInState){
+            print("current user "+ state.userEntity.firstName);
             myUserId = state.userEntity.id;
+          }
+          if(state is UserLoggedOutState){
+            myUserId = null;
           }
           return Scaffold(
             floatingActionButton: FloatingActionButton(
@@ -76,6 +79,7 @@ class _MessagesListState extends State<MessagesList> {
                           context: context,
                           builder: (context) =>
                               AlertDialog(
+                                insetPadding: const EdgeInsets.all(20),
                                 title: const Text('Delete message?'),
                                 actions: [
                                   GestureDetector(

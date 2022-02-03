@@ -14,8 +14,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
-import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 
@@ -296,8 +294,8 @@ class _ChatDetailState extends State<ChatDetail> {
                       style: TextStyle(fontSize: 10),
                     );
                   }
-                  if (state.chatStatus == ChatStatus.online) {
-                    return const Text('Online', style: TextStyle(fontSize: 10));
+                  if (state.chatStatus == ChatStatus.offline) {
+                    return const SizedBox();
                   }
                 }
                 return const SizedBox();

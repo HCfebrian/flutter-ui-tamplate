@@ -4,7 +4,7 @@ abstract class ChatDetailStatusEvent extends Equatable {
   const ChatDetailStatusEvent();
 }
 
-enum ChatStatus { online, typing, notTyping, offline }
+enum ChatStatus { online, typing, offline }
 
 class ChatDetailChangeStatusTypingEvent extends ChatDetailStatusEvent {
   final ChatStatus chatStatus;

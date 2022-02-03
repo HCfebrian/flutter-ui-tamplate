@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/src/message.dart';
 import 'package:flutter_chat_types/src/room.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
 
@@ -11,7 +12,8 @@ class ChatListRepoImpl implements ChatListRepoAbs {
 
   @override
   void deleteRoom({required Room room}) {
-    firestore.collection(ROOM_COLLECTION).doc(room.id).delete();
+    FirebaseChatCore.instance.deleteRoom(room.id);
+    // firestore.collection(ROOM_COLLECTION).doc(room.id).delete();
   }
 
   @override

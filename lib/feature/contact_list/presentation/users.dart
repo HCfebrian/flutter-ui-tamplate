@@ -20,10 +20,9 @@ class _UsersPageState extends State<UsersPage> {
 
   Future<void> _handlePressed(
       types.User otherUser, BuildContext context) async {
-    final room = await FirebaseChatCore.instance.createRoom(otherUser);
 
-    if (myUserId != null) {
-      print("other user " + otherUser.firstName.toString());
+      final room = await FirebaseChatCore.instance.createRoom(otherUser);
+      print('other user ${otherUser.firstName}');
       Navigator.of(context).pop();
       Navigator.pushNamed(
         context,
@@ -34,16 +33,7 @@ class _UsersPageState extends State<UsersPage> {
           'myUserId': myUserId
         },
       );
-    }
 
-    // Navigator.of(context).pushNamed(
-    //   context,
-    // MaterialPageRoute(
-    //   builder: (context) => ChatDetail(
-    //     room: room, name: '',
-    //   ),
-    // ),
-    // );
   }
 
   Widget _buildAvatar(types.User user) {

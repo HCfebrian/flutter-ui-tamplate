@@ -74,7 +74,7 @@ class ChatDetailUsecase {
       );
       Future.delayed(const Duration(seconds: TYPING_DEBAUCE_DURATION))
           .then((value) {
-        statusStream!.add(ChatStatus.online);
+        statusStream!.add(ChatStatus.offline);
         isTyping = false;
       });
     }
@@ -94,7 +94,7 @@ class ChatDetailUsecase {
         statusStream!.add(ChatStatus.typing);
         Future.delayed(const Duration(seconds: TYPING_DEBAUCE_DURATION))
             .then((value) {
-          statusStream!.add(ChatStatus.online);
+          statusStream!.add(ChatStatus.offline);
         });
       }
     });
