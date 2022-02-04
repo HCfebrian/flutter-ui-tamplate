@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,11 @@ class _UsersPageState extends State<UsersPage> {
       types.User otherUser, BuildContext context) async {
 
       final room = await FirebaseChatCore.instance.createRoom(otherUser);
+      FirebaseChatCore.instance.updateRoom(
+        room.copyWith(metadata: {
+          'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+        }),
+      );
       print('other user ${otherUser.firstName}');
       Navigator.of(context).pop();
       Navigator.pushNamed(

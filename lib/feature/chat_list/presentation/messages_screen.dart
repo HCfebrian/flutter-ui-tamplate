@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -73,6 +74,9 @@ class _MessagesListState extends State<MessagesList> {
                 return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, i) {
+                    if(snapshot.data?[i].metadata?['isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] == true){
+                      return const SizedBox();
+                    }
                     return GestureDetector(
                       onLongPress: () {
                         showDialog(

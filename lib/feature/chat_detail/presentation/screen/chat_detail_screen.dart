@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:bubble/bubble.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -48,8 +49,7 @@ class _ChatDetailState extends State<ChatDetail> {
 
   final int _page = 0;
 
-  Future _handleOnReachEnd() async{
-  }
+  Future _handleOnReachEnd() async {}
 
   Future<void> _handleMessageTap(types.Message message) async {
     if (message is types.FileMessage) {
@@ -112,6 +112,31 @@ class _ChatDetailState extends State<ChatDetail> {
         room: widget.room,
         myUserId: widget.myUserId,
       ),
+    );
+  }
+
+  Widget _bubbleBuilder(
+    Widget child, {
+    required message,
+    required nextMessageInGroup,
+  }) {
+    return Bubble(
+      child: Container(
+        child: Text(message.toString()),
+      ),
+      color: FirebaseAuth.instance.currentUser!.uid.toString() !=
+                  message.author.id.toString() ||
+              message.type == types.MessageType.image
+          ? const Color(0xfff5f5f7)
+          : const Color(0xff6f61e8),
+      // margin: nextMessageInGroup
+      //     ? const BubbleEdges.symmetric(horizontal: 6)
+      //     : null,
+      // nip: nextMessageInGroup
+      //     ? BubbleNip.no
+      //     : _user.id != message.author.id
+      //         ? BubbleNip.leftBottom
+      //         : BubbleNip.rightBottom,
     );
   }
 
@@ -184,6 +209,11 @@ class _ChatDetailState extends State<ChatDetail> {
         );
 
         FirebaseChatCore.instance.sendMessage(message, widget.room.id);
+        FirebaseChatCore.instance.updateRoom(
+          widget.room.copyWith(metadata: {
+            'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+          }),
+        );
         _setAttachmentUploading(false);
       } finally {
         _setAttachmentUploading(false);
@@ -197,11 +227,15 @@ class _ChatDetailState extends State<ChatDetail> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) async{
-    Map<String, dynamic> map = {};
+  void _handleSendPressed(types.PartialText message) async {
     FirebaseChatCore.instance.sendMessage(
       message,
       widget.room.id,
+    );
+    FirebaseChatCore.instance.updateRoom(
+      widget.room.copyWith(metadata: {
+        'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+      }),
     );
   }
 
@@ -236,6 +270,11 @@ class _ChatDetailState extends State<ChatDetail> {
         FirebaseChatCore.instance.sendMessage(
           message,
           widget.room.id,
+        );
+        FirebaseChatCore.instance.updateRoom(
+          widget.room.copyWith(metadata: {
+            'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+          }),
         );
         _setAttachmentUploading(false);
       } catch (e) {
@@ -330,6 +369,7 @@ class _ChatDetailState extends State<ChatDetail> {
             return SafeArea(
               bottom: false,
               child: Chat(
+                // bubbleBuilder: _bubbleBuilder,
                 isAttachmentUploading: _isAttachmentUploading,
                 messages: state.listMessage,
                 onAttachmentPressed: _handleAtachmentPressed,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/src/message.dart';
 import 'package:flutter_chat_types/src/room.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
@@ -11,9 +12,30 @@ class ChatListRepoImpl implements ChatListRepoAbs {
   ChatListRepoImpl({required this.firestore});
 
   @override
-  void deleteRoom({required Room room}) {
-    FirebaseChatCore.instance.deleteRoom(room.id);
-    // firestore.collection(ROOM_COLLECTION).doc(room.id).delete();
+  Future<void> deleteRoom({required Room room}) async {
+    // FirebaseChatCore.instance.deleteRoom(room.id);
+    final documents = await firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .collection(MESSAGE_COLLECTION)
+        .get();
+
+
+    documents.docs.forEach((element) {
+      firestore
+          .collection(ROOM_COLLECTION)
+          .doc(room.id)
+          .collection(MESSAGE_COLLECTION)
+          .doc(element.id)
+          .update({
+        'metadata': {
+          'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': true
+        }
+      });
+    });
+
+    FirebaseChatCore.instance.updateRoom(room.copyWith(metadata: {'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': true}));
+    return;
   }
 
   @override

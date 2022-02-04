@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_flutter/core/shared_feature/chat_util/domain/usecase/chat_util_usecase.dart';
 
@@ -72,18 +73,20 @@ class CustomCard extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   print('mobile room id ${roomId}');
-
                   if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
+                  } else {
+
+                    return Text(
+                      ChatUtilUsecase.getDisplayMessage(
+                        (snapshot.data?.docs.last.data() as Map),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 13,
+                      ),
+                    );
+
                   }
-                  return Text(
-                    ChatUtilUsecase.getDisplayMessage(
-                      (snapshot.data?.docs.last.data() as Map),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 13,
-                    ),
-                  );
                 },
               ),
               StreamBuilder<QuerySnapshot>(
@@ -101,21 +104,22 @@ class CustomCard extends StatelessWidget {
                   final count = ChatUtilUsecase.getUnreadCount(
                     snapshot.data!.docs,
                   );
-                  if(count == '0'){
+                  if (count == '0') {
                     return const SizedBox();
                   }
                   return Container(
                     decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.green),
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
                         count,
                         style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   );
