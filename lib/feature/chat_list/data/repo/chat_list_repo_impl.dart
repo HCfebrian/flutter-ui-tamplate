@@ -20,7 +20,6 @@ class ChatListRepoImpl implements ChatListRepoAbs {
         .collection(MESSAGE_COLLECTION)
         .get();
 
-
     documents.docs.forEach((element) {
       firestore
           .collection(ROOM_COLLECTION)
@@ -34,7 +33,17 @@ class ChatListRepoImpl implements ChatListRepoAbs {
       });
     });
 
-    FirebaseChatCore.instance.updateRoom(room.copyWith(metadata: {'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': true}));
+    FirebaseChatCore.instance.updateRoom(room.copyWith(metadata: {
+      'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': true
+    }));
+    // List<types.User> users = [];
+    // users.addAll(room.users);
+    // if (!users
+    //     .contains(types.User(id: FirebaseAuth.instance.currentUser!.uid))) {
+    //   users.add(types.User(id: FirebaseAuth.instance.currentUser!.uid));
+    // }
+
+    // FirebaseChatCore.instance.updateRoom(room.copyWith(users: users));
     return;
   }
 

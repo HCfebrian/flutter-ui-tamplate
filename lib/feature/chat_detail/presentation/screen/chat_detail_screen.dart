@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:bubble/bubble.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,30 +113,7 @@ class _ChatDetailState extends State<ChatDetail> {
     );
   }
 
-  Widget _bubbleBuilder(
-    Widget child, {
-    required message,
-    required nextMessageInGroup,
-  }) {
-    return Bubble(
-      child: Container(
-        child: Text(message.toString()),
-      ),
-      color: FirebaseAuth.instance.currentUser!.uid.toString() !=
-                  message.author.id.toString() ||
-              message.type == types.MessageType.image
-          ? const Color(0xfff5f5f7)
-          : const Color(0xff6f61e8),
-      // margin: nextMessageInGroup
-      //     ? const BubbleEdges.symmetric(horizontal: 6)
-      //     : null,
-      // nip: nextMessageInGroup
-      //     ? BubbleNip.no
-      //     : _user.id != message.author.id
-      //         ? BubbleNip.leftBottom
-      //         : BubbleNip.rightBottom,
-    );
-  }
+
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
@@ -209,11 +184,11 @@ class _ChatDetailState extends State<ChatDetail> {
         );
 
         FirebaseChatCore.instance.sendMessage(message, widget.room.id);
-        FirebaseChatCore.instance.updateRoom(
-          widget.room.copyWith(metadata: {
-            'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
-          }),
-        );
+        // FirebaseChatCore.instance.updateRoom(
+        //   widget.room.copyWith(metadata: {
+        //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+        //   }),
+        // );
         _setAttachmentUploading(false);
       } finally {
         _setAttachmentUploading(false);
@@ -232,11 +207,11 @@ class _ChatDetailState extends State<ChatDetail> {
       message,
       widget.room.id,
     );
-    FirebaseChatCore.instance.updateRoom(
-      widget.room.copyWith(metadata: {
-        'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
-      }),
-    );
+    // FirebaseChatCore.instance.updateRoom(
+    //   widget.room.copyWith(metadata: {
+    //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+    //   }),
+    // );
   }
 
   Future<void> _handleImageSelection() async {
@@ -271,11 +246,11 @@ class _ChatDetailState extends State<ChatDetail> {
           message,
           widget.room.id,
         );
-        FirebaseChatCore.instance.updateRoom(
-          widget.room.copyWith(metadata: {
-            'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
-          }),
-        );
+        // FirebaseChatCore.instance.updateRoom(
+        //   widget.room.copyWith(metadata: {
+        //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+        //   }),
+        // );
         _setAttachmentUploading(false);
       } catch (e) {
         print('error image selection $e');

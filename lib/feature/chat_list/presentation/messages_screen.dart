@@ -84,7 +84,7 @@ class _MessagesListState extends State<MessagesList> {
                           builder: (context) =>
                               AlertDialog(
                                 insetPadding: const EdgeInsets.all(20),
-                                title: const Text('Delete message?'),
+                                title: const Text('Delete message locally?'),
                                 actions: [
                                   GestureDetector(
                                     child: const Text('delete'),
