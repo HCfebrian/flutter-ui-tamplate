@@ -1,5 +1,5 @@
 class StaticConstant {
-  static String titleApp = 'Example App';
+  static String titleApp = 'Chat Prototype';
   static String baseUrlDev = 'https://www.googleapis.com/';
   static String baseUrlStaging = 'https://www.googleapis.com/';
   static String baseUrlProduction = 'https://www.googleapis.com/';
