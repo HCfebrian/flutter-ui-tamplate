@@ -5,6 +5,7 @@ import 'package:flutter_chat_types/src/room.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatListRepoImpl implements ChatListRepoAbs {
   final FirebaseFirestore firestore;
@@ -36,14 +37,19 @@ class ChatListRepoImpl implements ChatListRepoAbs {
     FirebaseChatCore.instance.updateRoom(room.copyWith(metadata: {
       'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': true
     }));
-    // List<types.User> users = [];
-    // users.addAll(room.users);
-    // if (!users
-    //     .contains(types.User(id: FirebaseAuth.instance.currentUser!.uid))) {
-    //   users.add(types.User(id: FirebaseAuth.instance.currentUser!.uid));
-    // }
-
-    // FirebaseChatCore.instance.updateRoom(room.copyWith(users: users));
+    List<types.User> users = [];
+    users.addAll(room.users);
+    if (room.users.length < 2) {
+      users.add(types.User(id: FirebaseAuth.instance.currentUser!.uid));
+    }
+    List<String> userID = [];
+    users.forEach((element) {
+      userID.add(element.id);
+    });
+    firestore
+        .collection(ROOM_COLLECTION)
+        .doc(room.id)
+        .update({"userIds": userID});
     return;
   }
 

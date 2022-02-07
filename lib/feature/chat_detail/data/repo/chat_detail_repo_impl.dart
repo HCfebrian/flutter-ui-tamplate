@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-
-// import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
@@ -33,11 +31,10 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
         .listen((event) {
       List<types.Message> message = [];
       event.forEach((element) {
-        print("nilai metadata " +
-            (element.metadata?['isDeleted-${FirebaseAuth.instance.currentUser!
-                .uid}']).toString());
-        if (element.metadata?['isDeleted-${FirebaseAuth.instance.currentUser!
-            .uid}'] == true) {} else {
+        if (element.metadata?[
+                'isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] ==
+            true) {
+        } else {
           message.add(element);
         }
       });
@@ -74,9 +71,10 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   }
 
   @override
-  Future setTypingStatusDate({required DateTime date,
-    required types.Room room,
-    required String myUserId}) async {
+  Future setTypingStatusDate(
+      {required DateTime date,
+      required types.Room room,
+      required String myUserId}) async {
     firestore
         .collection(ROOM_COLLECTION)
         .doc(room.id)
@@ -115,7 +113,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
         .doc(room.id)
         .collection(MESSAGE_COLLECTION)
         .doc(message.id)
-        .update({"status": types.Status.seen.name});
+        .update({'status': types.Status.seen.name});
   }
 
   @override
