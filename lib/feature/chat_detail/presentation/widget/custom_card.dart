@@ -68,24 +68,34 @@ class CustomCard extends StatelessWidget {
                     .collection('rooms')
                     .doc(roomId)
                     .collection('messages')
-                    .orderBy('updatedAt', descending: true)
-                    .limit(1)
+                    .orderBy('updatedAt', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
                   print('mobile room id ${roomId}');
                   if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
                   } else {
-
+                    QueryDocumentSnapshot<Object?>? result;
+                    try {
+                      result = snapshot.data?.docs.lastWhere((element) {
+                        return (element.data() as Map)['metadata'] == null ||
+                            (element.data() as Map)['metadata'][
+                            'isDeleted-${FirebaseAuth.instance.currentUser?.uid}'] ==
+                                false;
+                      });
+                    } catch (e) {
+                      print(e);
+                    }
                     return Text(
-                      ChatUtilUsecase.getDisplayMessage(
-                        (snapshot.data?.docs.last.data() as Map),
+                      (result == null)
+                          ? ''
+                          : ChatUtilUsecase.getDisplayMessage(
+                        snapshot.data?.docs.last.data() as Map,
                       ),
                       style: const TextStyle(
                         fontSize: 13,
                       ),
                     );
-
                   }
                 },
               ),
