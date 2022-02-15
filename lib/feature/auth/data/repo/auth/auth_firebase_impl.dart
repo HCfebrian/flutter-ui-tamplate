@@ -69,14 +69,15 @@ class AuthFirebaseImpl implements AuthRepoAbs {
     //   ),
     // );
 
-    MutableDocument doc = MutableDocument().setMap(
-      "Users",
+    MutableDocument doc =
+        MutableDocument(id: "${userCredential.user!.uid}").setData(
       types.User(
               id: userCredential.user!.uid,
               firstName: username,
               imageUrl: 'https://i.pravatar.cc/300?u=$email')
           .toJson(),
     );
+    doc.setString('docType', 'user');
 
     // couchBaseDb.saveDocument(doc);
     print("save document user" + doc.toMap().toString());
