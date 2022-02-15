@@ -11,7 +11,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 class ChatUserRepoImpl implements ChatUserRepoAbs {
 
   final Database database;
-  
+
   ChatUserRepoImpl({required this.database});
 
   @override
@@ -24,17 +24,20 @@ class ChatUserRepoImpl implements ChatUserRepoAbs {
     //   'photoUrl': user.photoUrl
     // });
 
-    final lol =  types.User(id: "").toJson();
+    final saveUser = types.User(
+      id: user.id,
+      firstName: user.name,
+      imageUrl: user.photoUrl,
+    ).toJson();
 
     // Create a new document (i.e. a record) in the database.
+    // MutableDocument? mutableDoc =
+    //     MutableDocument(id: "Users").setMap(user.id, saveUser);
+
     MutableDocument? mutableDoc =
-    MutableDocument();
+        MutableDocument(id: user.id).setData(saveUser);
 
-    mutableDoc.setString("uid", user.id);
-    mutableDoc.setString("displayName", user.name);
-    mutableDoc.setString("photoUrl", user.photoUrl);
-
-
+    mutableDoc.setString("docType", "user");
 
     // Save it to the database.
     try {
