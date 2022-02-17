@@ -33,11 +33,12 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
                 print("change status");
                 chatDetailUsecase.markAsRead(
                     message: element, room: event.room);
-              } else if (element.author.id == meUser!.uid &&
-                  element.status != types.Status.seen) {
-                chatDetailUsecase.markAsDelivered(
-                    message: element, room: event.room);
               }
+              // else if (element.author.id == meUser!.uid &&
+              //     element.status != types.Status.seen) {
+              //   chatDetailUsecase.markAsDelivered(
+              //       message: element, room: event.room);
+              // }
             },
           );
           add(ChatDetailDisplayMessageEvent(listMessage: messages));
