@@ -49,7 +49,8 @@ class _ChatDetailState extends State<ChatDetail> {
 
   Future _handleOnReachEnd() async {}
 
-  Future<void> _handleMessageTap(types.Message message) async {
+  Future<void> _handleMessageTap(
+      BuildContext context, types.Message message) async {
     if (message is types.FileMessage) {
       var localPath = message.uri;
 
@@ -70,7 +71,8 @@ class _ChatDetailState extends State<ChatDetail> {
     }
   }
 
-  Future<void> _handleLongPress(types.Message message) async {
+  Future<void> _handleLongPress(
+      BuildContext context, types.Message message) async {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -112,8 +114,6 @@ class _ChatDetailState extends State<ChatDetail> {
       ),
     );
   }
-
-
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
