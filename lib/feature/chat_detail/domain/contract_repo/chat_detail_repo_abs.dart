@@ -5,14 +5,25 @@ abstract class ChatDetailRepoAbs {
 
   void dispose();
 
-  Future deleteMessage(
-      {required types.Message message, required types.Room room});
+  Future sendMessage({
+    required Map<String, dynamic> message,
+    required types.Room room,
+  });
 
-  Future deleteImageStorage(
-      {required types.ImageMessage message, required types.Room room});
+  Future deleteMessage({
+    required types.Message message,
+    required types.Room room,
+  });
 
-  Future deleteFile(
-      {required types.FileMessage message, required types.Room room});
+  Future deleteImageStorage({
+    required types.ImageMessage message,
+    required types.Room room,
+  });
+
+  Future deleteFile({
+    required types.FileMessage message,
+    required types.Room room,
+  });
 
   Future setTypingStatusDate({
     required DateTime date,
@@ -20,15 +31,17 @@ abstract class ChatDetailRepoAbs {
     required String myUserId,
   });
 
-  Stream<DateTime> startLastTypingStream(
-      {required types.Room room, required String otherUserId});
+  Stream<DateTime> startLastTypingStream({
+    required types.Room room,
+    required String otherUserId,
+  });
 
   Future markAsRead({
     required types.Message message,
     required types.Room room,
   });
-  Future markAsDelivered({
-    required types.Message message,
-    required types.Room room,
-  });
+// Future markAsDelivered({
+//   required types.Message message,
+//   required types.Room room,
+// });
 }

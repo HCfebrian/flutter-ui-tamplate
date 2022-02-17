@@ -1,6 +1,5 @@
-import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,12 +15,6 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
-
-String randomString() {
-  final random = Random.secure();
-  final values = List<int>.generate(16, (i) => random.nextInt(255));
-  return base64UrlEncode(values);
-}
 
 class ChatDetail extends StatefulWidget {
   final types.Room room;
@@ -203,15 +196,17 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   void _handleSendPressed(types.PartialText message) async {
+    log("handlesendpress");
+    log("message ${message.toJson()}");
+    log("room ${widget.room.id}");
+    BlocProvider.of<ChatDetailBloc>(context).add(
+      ChatSendMessageEvent(message: message, room: widget.room),
+    );
+
     FirebaseChatCore.instance.sendMessage(
       message,
       widget.room.id,
     );
-    // FirebaseChatCore.instance.updateRoom(
-    //   widget.room.copyWith(metadata: {
-    //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
-    //   }),
-    // );
   }
 
   Future<void> _handleImageSelection() async {

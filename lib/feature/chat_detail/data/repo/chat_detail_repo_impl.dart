@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,11 +25,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream?.close();
     messageStream = null;
     messageStream ??= StreamController();
-    FirebaseChatCore.instance
-        .messages(
-      room,
-    )
-        .listen((event) {
+    FirebaseChatCore.instance.messages(room).listen((event) {
       List<types.Message> message = [];
       event.forEach((element) {
         if (element.metadata?[
@@ -117,13 +114,27 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   }
 
   @override
-  Future markAsDelivered(
-      {required types.Message message, required types.Room room}) async {
-    return firestore
-        .collection(ROOM_COLLECTION)
-        .doc(room.id)
-        .collection(MESSAGE_COLLECTION)
-        .doc(message.id)
-        .update({'status': types.Status.delivered.name});
+  Future sendMessage(
+      {required Map<String, dynamic> message, required types.Room room}) async {
+    print("send message data layer : " + message.toString());
+    try {
+      return firestore
+          .collection('${ROOM_COLLECTION}/${room.id}/messages')
+          .add(message);
+    } catch (e) {
+      log("error firebase " + e.toString());
+      return;
+    }
   }
+
+// @override
+// Future markAsDelivered(
+//     {required types.Message message, required types.Room room}) async {
+//   return firestore
+//       .collection(ROOM_COLLECTION)
+//       .doc(room.id)
+//       .collection(MESSAGE_COLLECTION)
+//       .doc(message.id)
+//       .update({'status': types.Status.delivered.name});
+// }
 }

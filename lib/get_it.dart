@@ -57,7 +57,7 @@ void initDepInject() {
   getIt.registerLazySingleton(() => SplashUsecase());
   getIt.registerLazySingleton(() => ChatUsecase(chatListRepoAbs: getIt()));
   getIt.registerLazySingleton(
-      () => ChatDetailUsecase(chatDetailRepoAbs: getIt()));
+      () => ChatDetailUsecase(chatDetailRepoAbs: getIt(), userUsecase: getIt()));
   getIt.registerLazySingleton(() => ChatUtilUsecase(chatUserRepoAbs: getIt()));
   getIt.registerLazySingleton(
     () => AuthUsecase(

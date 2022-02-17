@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
+import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
+import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 
@@ -9,6 +13,7 @@ const int TYPING_DEBAUCE_DURATION = 3;
 
 class ChatDetailUsecase {
   final ChatDetailRepoAbs chatDetailRepoAbs;
+  final UserUsecase userUsecase;
 
   StreamController<ChatStatus>? statusStream;
 
@@ -16,6 +21,7 @@ class ChatDetailUsecase {
   DateTime? lastTypingDate;
 
   ChatDetailUsecase({
+    required this.userUsecase,
     required this.chatDetailRepoAbs,
   });
 
@@ -24,10 +30,25 @@ class ChatDetailUsecase {
   }
 
   Future addMessageToDb({
-    required types.Message messageEntity,
-    required UserEntity sender,
-    required UserEntity receiver,
-  }) async {}
+    required types.PartialText partialText,
+    required types.Room roomId,
+  }) async {
+    log('Send message');
+    final user = await userUsecase.getUserData();
+    log("user now send message $user");
+    final message = types.TextMessage.fromPartial(
+      author: types.User(id: user!.id),
+      id: '',
+      partialText: partialText,
+    );
+
+    final messageToSend = message.toJson();
+
+    log("usecase send message data : $messageToSend");
+    log("room : " + roomId.id);
+
+    chatDetailRepoAbs.sendMessage(message: messageToSend, room: roomId);
+  }
 
   Future addToSenderContact({
     required String senderId,
@@ -60,13 +81,14 @@ class ChatDetailUsecase {
     }
   }
 
-  Future markAsRead({required types.Message message, required types.Room room}){
+  Future markAsRead(
+      {required types.Message message, required types.Room room}) {
     return chatDetailRepoAbs.markAsRead(message: message, room: room);
   }
 
-  Future markAsDelivered({required types.Message message, required types.Room room}){
-    return chatDetailRepoAbs.markAsDelivered(message: message, room: room);
-  }
+  // Future markAsDelivered({required types.Message message, required types.Room room}){
+  //   return chatDetailRepoAbs.markAsDelivered(message: message, room: room);
+  // }
 
   Future typingStatus({
     required types.Room room,
@@ -95,8 +117,9 @@ class ChatDetailUsecase {
     statusStream?.close();
     statusStream = null;
     statusStream ??= StreamController();
-    chatDetailRepoAbs.startLastTypingStream(
-        room: room, otherUserId: otherUserId).listen((event) {
+    chatDetailRepoAbs
+        .startLastTypingStream(room: room, otherUserId: otherUserId)
+        .listen((event) {
       final now = DateTime.now();
       if (now.difference(event) <
           const Duration(seconds: TYPING_DEBAUCE_DURATION)) {

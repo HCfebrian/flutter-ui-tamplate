@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -16,6 +17,23 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
 
   ChatDetailBloc({required this.chatDetailUsecase})
       : super(ChatDetailInitial()) {
+
+    on<ChatDetailEvent>((event, emit) {
+      log("event name" + event.toString());
+    });
+
+
+
+    on<ChatSendMessageEvent>(
+          (event, emit) {
+        log("bloc run");
+        chatDetailUsecase.addMessageToDb(
+          partialText: event.message,
+          roomId: event.room,
+        );
+      },
+    );
+
     on<ChatDetailInitStreamEvent>(
       (event, emit) {
         add(const ChatDetailDisplayMessageEvent(listMessage: []));
@@ -25,7 +43,8 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
           print("sub empty");
         }
         final meUser = FirebaseAuth.instance.currentUser;
-        chatStream = chatDetailUsecase.initStream(event.room).listen((messages) {
+        chatStream =
+            chatDetailUsecase.initStream(event.room).listen((messages) {
           messages.forEach(
             (element) {
               if (element.status != types.Status.seen &&
@@ -71,6 +90,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
             message: event.message, room: event.room);
       },
     );
+
 
     on<ChatMarkAsReadEvent>(
       (event, emit) {
