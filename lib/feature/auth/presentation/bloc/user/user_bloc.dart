@@ -57,6 +57,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         userUsecase.registerFcmToken(userId: event.userEntity!.id);
         emit(UserLoggedInState(userEntity: event.userEntity!));
       } else {
+        userUsecase.refreshFcmToken();
         log("user not exist");
         emit(UserLoggedOutState());
       }

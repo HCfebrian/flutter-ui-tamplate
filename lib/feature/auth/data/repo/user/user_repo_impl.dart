@@ -53,4 +53,9 @@ class UserRepoImpl implements UserRepoAbs {
       log("token fcm not found");
     }
   }
+
+  @override
+  Future refreshFcmToken() {
+    return firebaseMessaging.deleteToken();
+  }
 }

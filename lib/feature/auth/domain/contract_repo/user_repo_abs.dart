@@ -4,4 +4,5 @@ abstract class UserRepoAbs {
   Future<UserEntity> getUserData();
   Stream<UserEntity?> getUserDataStream();
   Future registerFcmToken({required String userId});
+  Future refreshFcmToken();
 }

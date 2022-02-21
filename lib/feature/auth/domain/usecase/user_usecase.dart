@@ -27,4 +27,7 @@ class UserUsecase {
     return userRepoAbs.registerFcmToken(userId: userId);
   }
 
+  Future refreshFcmToken (){
+    return userRepoAbs.refreshFcmToken();
+  }
 }
