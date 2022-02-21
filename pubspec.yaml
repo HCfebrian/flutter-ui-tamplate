@@ -52,6 +52,7 @@ dependencies:
   firebase_storage: ^10.2.5
   flutter_firebase_chat_core: ^1.5.2
   bubble: ^1.2.1
+  firebase_messaging: ^11.2.6
 
 dev_dependencies:
   flutter_test:

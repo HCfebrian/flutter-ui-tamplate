@@ -40,6 +40,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       await authUsecase.logout();
       emit(UserLoggedOutState());
     });
+
     on<UserStateStreamInitEvent>(
       (event, emit) async {
         userUsecase.getUserDataStream().listen(
@@ -52,9 +53,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<_UserGetUpdatedEvent>((event, emit) async {
       if (event.userEntity != null) {
-        // chatUtilUsecase.registerUserChat(userEntity: event.userEntity!);
+        log("user entity exist");
+        userUsecase.registerFcmToken(userId: event.userEntity!.id);
         emit(UserLoggedInState(userEntity: event.userEntity!));
       } else {
+        log("user not exist");
         emit(UserLoggedOutState());
       }
     });

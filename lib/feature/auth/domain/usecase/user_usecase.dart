@@ -22,4 +22,9 @@ class UserUsecase {
   Stream<UserEntity?> getUserDataStream() {
     return userRepoAbs.getUserDataStream();
   }
+
+  Future registerFcmToken ({required String userId}){
+    return userRepoAbs.registerFcmToken(userId: userId);
+  }
+
 }

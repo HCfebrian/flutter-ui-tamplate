@@ -203,10 +203,10 @@ class _ChatDetailState extends State<ChatDetail> {
       ChatSendMessageEvent(message: message, room: widget.room),
     );
 
-    FirebaseChatCore.instance.sendMessage(
-      message,
-      widget.room.id,
-    );
+    // FirebaseChatCore.instance.sendMessage(
+    //   message,
+    //   widget.room.id,
+    // );
   }
 
   Future<void> _handleImageSelection() async {

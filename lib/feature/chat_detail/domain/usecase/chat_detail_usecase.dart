@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
-import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
@@ -35,19 +33,23 @@ class ChatDetailUsecase {
   }) async {
     log('Send message');
     final user = await userUsecase.getUserData();
-    log("user now send message $user");
-    final message = types.TextMessage.fromPartial(
+    final types.Message message = types.TextMessage.fromPartial(
       author: types.User(id: user!.id),
       id: '',
       partialText: partialText,
     );
 
-    final messageToSend = message.toJson();
 
-    log("usecase send message data : $messageToSend");
+    final messageMap = message.toJson();
+    messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+    messageMap['authorId'] = user.id;
+    messageMap['createdAt'] = FieldValue.serverTimestamp();
+    messageMap['updatedAt'] = FieldValue.serverTimestamp();
+
+    log("usecase send message data : $messageMap");
     log("room : " + roomId.id);
 
-    chatDetailRepoAbs.sendMessage(message: messageToSend, room: roomId);
+    chatDetailRepoAbs.sendMessage(message: messageMap, room: roomId);
   }
 
   Future addToSenderContact({

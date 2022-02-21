@@ -80,7 +80,7 @@ class CustomCard extends StatelessWidget {
                       result = snapshot.data?.docs.lastWhere((element) {
                         return (element.data() as Map)['metadata'] == null ||
                             (element.data() as Map)['metadata'][
-                            'isDeleted-${FirebaseAuth.instance.currentUser?.uid}'] ==
+                                    'isDeleted-${FirebaseAuth.instance.currentUser?.uid}'] ==
                                 false;
                       });
                     } catch (e) {
@@ -90,8 +90,8 @@ class CustomCard extends StatelessWidget {
                       (result == null)
                           ? ''
                           : ChatUtilUsecase.getDisplayMessage(
-                        snapshot.data?.docs.last.data() as Map,
-                      ),
+                              snapshot.data?.docs.last.data() as Map,
+                            ),
                       style: const TextStyle(
                         fontSize: 13,
                       ),
@@ -127,9 +127,10 @@ class CustomCard extends StatelessWidget {
                       child: Text(
                         count,
                         style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   );

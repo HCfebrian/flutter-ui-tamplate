@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,7 +102,7 @@ void initDepInject() {
     () => AuthFirebaseImpl(firebaseAuth: getIt()),
   );
   getIt.registerLazySingleton<UserRepoAbs>(
-    () => UserRepoImpl(firebaseAuth: getIt()),
+    () => UserRepoImpl(firebaseAuth: getIt(), firestore: getIt(), firebaseMessaging: getIt()),
   );
 
   //data_source
@@ -130,6 +131,7 @@ void initDepInject() {
   getIt.registerLazySingleton(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => FirebaseFirestore.instance);
   getIt.registerLazySingleton(() => FirebaseStorage.instance);
+  getIt.registerLazySingleton(() => FirebaseMessaging.instance);
   // getIt.registerLazySingleton(
   //       () => Dio(
   //     BaseOptions(baseUrl: FlavorConfig.instance.values.baseUrl),
