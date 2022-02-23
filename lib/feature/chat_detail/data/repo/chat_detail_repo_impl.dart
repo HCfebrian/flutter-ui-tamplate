@@ -58,7 +58,10 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    dbRealtimeStream?.cancel();
+    dbRealtimeStream = null;
+  }
 
   @override
   Future deleteMessage(
