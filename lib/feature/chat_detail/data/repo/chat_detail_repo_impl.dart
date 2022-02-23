@@ -16,7 +16,8 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   StreamController<List<types.Message>>? messageStream;
   StreamSubscription? dbRealtimeStream;
   StreamController<DateTime>? lastTypingStream;
-  int limit = 10;
+  final fetchCount = 20;
+  int limit = 20;
 
   ChatDetailRepoImpl({
     required this.firestore,
@@ -28,7 +29,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream?.close();
     messageStream = null;
     messageStream ??= StreamController();
-    limit = 10;
+    limit = fetchCount;
 
     // dbRealtimeStream = firestore.collection("$ROOM_COLLECTION/${room.id}/$MESSAGE_COLLECTION").snapshots().listen((event) {
     //   List<types.Message> message = [];
@@ -167,7 +168,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     required types.Room room,
   }) async {
     log('next page data layer limit : $limit');
-    limit = limit + 20;
+    limit = limit + fetchCount;
     dbRealtimeStream?.cancel();
     dbRealtimeStream = null;
     dbRealtimeStream = FirebaseChatCore.instance
