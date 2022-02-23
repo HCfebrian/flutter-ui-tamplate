@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
@@ -69,10 +71,35 @@ class ChatDetailUsecase {
   }) async {}
 
   Future sendImageMsg({
-    required String url,
-    required String receiverId,
-    required String senderId,
-  }) async {}
+    required String path,
+    required String fileName,
+    required types.Room room,
+  }) async {
+    final file = File(path);
+    final size = file.lengthSync();
+    final bytes = await file.readAsBytes();
+    final image = await decodeImageFromList(bytes);
+
+    final user = await userUsecase.getUserData();
+    final uri = await chatDetailRepoAbs.uploadImageStorage(
+        file: file, fileName: fileName);
+    print('uri $uri');
+    final message = types.PartialImage(
+      height: image.height.toDouble(),
+      name: fileName,
+      size: size,
+      uri: uri,
+      width: image.width.toDouble(),
+    );
+    final messageMap = message.toJson();
+    messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+    messageMap['authorId'] = user?.id;
+    messageMap['createdAt'] = FieldValue.serverTimestamp();
+    messageMap['updatedAt'] = FieldValue.serverTimestamp();
+    messageMap['type'] = 'image';
+
+    chatDetailRepoAbs.sendMessage(message: messageMap, room: room);
+  }
 
   Future deleteMessage(
       {required types.Message message, required types.Room room}) async {

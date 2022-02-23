@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,20 +32,6 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream ??= StreamController();
     limit = fetchCount;
 
-    // dbRealtimeStream = firestore.collection("$ROOM_COLLECTION/${room.id}/$MESSAGE_COLLECTION").snapshots().listen((event) {
-    //   List<types.Message> message = [];
-    //   // event.forEach((element) {
-    //   //   if (element.metadata?[
-    //   //           'isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] ==
-    //   //       true) {
-    //   //   } else {
-    //   //     message.add(element);
-    //   //   }
-    //   // });
-    //
-    //   messageStream!.add(message);
-    // });
-
     dbRealtimeStream = FirebaseChatCore.instance
         .messages(
       room,
@@ -60,6 +47,8 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
 
   @override
   void dispose() {
+    messageStream?.close();
+    messageStream = null;
     dbRealtimeStream?.cancel();
     dbRealtimeStream = null;
   }
@@ -182,6 +171,15 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     });
 
     return;
+  }
+
+  @override
+  Future<String> uploadImageStorage(
+      {required File file, required String fileName}) async {
+    final reference = FirebaseStorage.instance.ref(fileName);
+    await reference.putFile(file);
+    final uri = await reference.getDownloadURL();
+    return uri;
   }
 
 // @override

@@ -99,8 +99,18 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
 
     on<ChatDetailNextPageEvent>(
       (event, emit) {
-
         chatDetailUsecase.nextPage();
+      },
+    );
+
+    on<ChatDetailSendImageEvent>(
+      (event, emit) {
+        try {
+          chatDetailUsecase.sendImageMsg(
+              path: event.filePath, room: event.room, fileName: event.fileName);
+        } catch (e) {
+          log(e.toString());
+        }
       },
     );
   }

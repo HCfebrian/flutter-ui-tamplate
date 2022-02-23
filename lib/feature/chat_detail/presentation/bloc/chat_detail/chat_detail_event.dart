@@ -69,3 +69,18 @@ class ChatMarkAsReadEvent extends ChatDetailEvent {
 }
 
 class ChatDetailNextPageEvent extends ChatDetailEvent {}
+
+class ChatDetailSendImageEvent extends ChatDetailEvent {
+  final String filePath;
+  final types.Room room;
+  final String fileName;
+
+  const ChatDetailSendImageEvent({
+    required this.filePath,
+    required this.room,
+    required this.fileName,
+  });
+
+  @override
+  List<Object?> get props => [filePath, room];
+}

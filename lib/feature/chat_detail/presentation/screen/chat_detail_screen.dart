@@ -197,18 +197,13 @@ class _ChatDetailState extends State<ChatDetail> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) async {
+  Future<void> _handleSendPressed(types.PartialText message) async {
     log("handlesendpress");
     log("message ${message.toJson()}");
     log("room ${widget.room.id}");
     BlocProvider.of<ChatDetailBloc>(context).add(
       ChatSendMessageEvent(message: message, room: widget.room),
     );
-
-    // FirebaseChatCore.instance.sendMessage(
-    //   message,
-    //   widget.room.id,
-    // );
   }
 
   Future<void> _handleImageSelection() async {
@@ -217,43 +212,52 @@ class _ChatDetailState extends State<ChatDetail> {
       maxWidth: 1440,
       source: ImageSource.camera,
     );
+    log('file name ${result?.name}');
 
     if (result != null) {
       _setAttachmentUploading(true);
-      final file = File(result.path);
-      final size = file.lengthSync();
-      final bytes = await result.readAsBytes();
-      final image = await decodeImageFromList(bytes);
-      final name = result.name;
+      BlocProvider.of<ChatDetailBloc>(context).add(
+        ChatDetailSendImageEvent(
+            filePath: result.path, room: widget.room, fileName: result.name,),
+      );
+      _setAttachmentUploading(false);
 
-      try {
-        final reference = FirebaseStorage.instance.ref(name);
-        await reference.putFile(file);
-        final uri = await reference.getDownloadURL();
-        print('uri $uri');
-        final message = types.PartialImage(
-          height: image.height.toDouble(),
-          name: name,
-          size: size,
-          uri: uri,
-          width: image.width.toDouble(),
-        );
 
-        FirebaseChatCore.instance.sendMessage(
-          message,
-          widget.room.id,
-        );
-        // FirebaseChatCore.instance.updateRoom(
-        //   widget.room.copyWith(metadata: {
-        //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
-        //   }),
-        // );
-        _setAttachmentUploading(false);
-      } catch (e) {
-        print('error image selection $e');
-      } finally {
-        _setAttachmentUploading(false);
-      }
+      // final file = File(result.path);
+      // final size = file.lengthSync();
+      // final bytes = await result.readAsBytes();
+      // final image = await decodeImageFromList(bytes);
+      // final name = result.name;
+      //
+      // try {
+      //   final reference = FirebaseStorage.instance.ref(name);
+      //   await reference.putFile(file);
+      //   final uri = await reference.getDownloadURL();
+      //   print('uri $uri');
+      //   final message = types.PartialImage(
+      //     height: image.height.toDouble(),
+      //     name: name,
+      //     size: size,
+      //     uri: uri,
+      //     width: image.width.toDouble(),
+      //   );
+      //
+      //   // FirebaseChatCore.instance.sendMessage(
+      //   //   message,
+      //   //   widget.room.id,
+      //   // );
+      //   // FirebaseChatCore.instance.updateRoom(
+      //   //   widget.room.copyWith(metadata: {
+      //   //     'isDeleted-${FirebaseAuth.instance.currentUser!.uid}': false
+      //   //   }),
+      //   // );
+      //   _setAttachmentUploading(false);
+      // } catch (e) {
+      //   print('error image selection $e');
+      // } finally {
+      //   _setAttachmentUploading(false);
+      // }
+
     }
   }
 

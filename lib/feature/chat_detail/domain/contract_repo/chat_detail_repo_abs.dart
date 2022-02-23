@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 abstract class ChatDetailRepoAbs {
@@ -14,6 +16,8 @@ abstract class ChatDetailRepoAbs {
     required types.Message message,
     required types.Room room,
   });
+
+  Future<String> uploadImageStorage({required File file, required String fileName});
 
   Future deleteImageStorage({
     required types.ImageMessage message,
