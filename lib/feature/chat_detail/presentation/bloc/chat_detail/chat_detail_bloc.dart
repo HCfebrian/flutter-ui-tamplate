@@ -17,15 +17,12 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
 
   ChatDetailBloc({required this.chatDetailUsecase})
       : super(ChatDetailInitial()) {
-
     on<ChatDetailEvent>((event, emit) {
       log("event name" + event.toString());
     });
 
-
-
     on<ChatSendMessageEvent>(
-          (event, emit) {
+      (event, emit) {
         log("bloc run");
         chatDetailUsecase.addMessageToDb(
           partialText: event.message,
@@ -91,13 +88,19 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
       },
     );
 
-
     on<ChatMarkAsReadEvent>(
       (event, emit) {
         chatDetailUsecase.markAsRead(
           message: event.message,
           room: event.room,
         );
+      },
+    );
+
+    on<ChatDetailNextPageEvent>(
+      (event, emit) {
+
+        chatDetailUsecase.nextPage();
       },
     );
   }

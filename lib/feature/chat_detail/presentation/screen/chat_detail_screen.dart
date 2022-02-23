@@ -40,7 +40,9 @@ class _ChatDetailState extends State<ChatDetail> {
 
   final int _page = 0;
 
-  Future _handleOnReachEnd() async {}
+  Future _handleOnReachEnd() async {
+    BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailNextPageEvent());
+  }
 
   Future<void> _handleMessageTap(
       BuildContext context, types.Message message) async {

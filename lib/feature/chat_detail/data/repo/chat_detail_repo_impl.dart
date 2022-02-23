@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 
@@ -13,7 +14,9 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   final FirebaseFirestore firestore;
   final FirebaseStorage firebaseStorage;
   StreamController<List<types.Message>>? messageStream;
+  StreamSubscription? dbRealtimeStream;
   StreamController<DateTime>? lastTypingStream;
+  int limit = 10;
 
   ChatDetailRepoImpl({
     required this.firestore,
@@ -25,19 +28,32 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     messageStream?.close();
     messageStream = null;
     messageStream ??= StreamController();
-    FirebaseChatCore.instance.messages(room).listen((event) {
-      List<types.Message> message = [];
-      event.forEach((element) {
-        if (element.metadata?[
-                'isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] ==
-            true) {
-        } else {
-          message.add(element);
-        }
-      });
+    limit = 10;
 
-      messageStream!.add(message);
+    // dbRealtimeStream = firestore.collection("$ROOM_COLLECTION/${room.id}/$MESSAGE_COLLECTION").snapshots().listen((event) {
+    //   List<types.Message> message = [];
+    //   // event.forEach((element) {
+    //   //   if (element.metadata?[
+    //   //           'isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] ==
+    //   //       true) {
+    //   //   } else {
+    //   //     message.add(element);
+    //   //   }
+    //   // });
+    //
+    //   messageStream!.add(message);
+    // });
+
+    dbRealtimeStream = FirebaseChatCore.instance
+        .messages(
+      room,
+      limit: limit,
+    )
+        .listen((event) {
+      final filteredMessage = excludeDeletedMessage(unfilteredMessage: event);
+      messageStream!.add(filteredMessage);
     });
+
     return messageStream!.stream;
   }
 
@@ -116,15 +132,52 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   @override
   Future sendMessage(
       {required Map<String, dynamic> message, required types.Room room}) async {
-    print("send message data layer : " + message.toString());
+    log('send message data layer : $message');
     try {
       return firestore
-          .collection('${ROOM_COLLECTION}/${room.id}/messages')
+          .collection('$ROOM_COLLECTION/${room.id}/messages')
           .add(message);
     } catch (e) {
-      log("error firebase " + e.toString());
+      log('error firebase $e');
       return;
     }
+  }
+
+  List<types.Message> excludeDeletedMessage(
+      {required List<types.Message> unfilteredMessage}) {
+    final List<types.Message> filteredMessage = [];
+
+    unfilteredMessage.forEach((element) {
+      if (element.metadata?[
+              'isDeleted-${FirebaseAuth.instance.currentUser!.uid}'] ==
+          true) {
+      } else {
+        filteredMessage.add(element);
+      }
+    });
+    return filteredMessage;
+  }
+
+  @override
+  Future nextPage({
+    required int page,
+    required types.Room room,
+  }) async {
+    log('next page data layer limit : $limit');
+    limit = limit + 20;
+    dbRealtimeStream?.cancel();
+    dbRealtimeStream = null;
+    dbRealtimeStream = FirebaseChatCore.instance
+        .messages(
+      room,
+      limit: limit,
+    )
+        .listen((event) {
+      final filteredMessage = excludeDeletedMessage(unfilteredMessage: event);
+      messageStream!.add(filteredMessage);
+    });
+
+    return;
   }
 
 // @override

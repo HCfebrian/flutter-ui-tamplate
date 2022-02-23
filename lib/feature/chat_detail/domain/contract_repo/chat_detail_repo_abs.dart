@@ -40,6 +40,11 @@ abstract class ChatDetailRepoAbs {
     required types.Message message,
     required types.Room room,
   });
+
+  Future nextPage({
+    required int page,
+    required types.Room room,
+  });
 // Future markAsDelivered({
 //   required types.Message message,
 //   required types.Room room,

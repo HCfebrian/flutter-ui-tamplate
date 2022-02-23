@@ -57,8 +57,8 @@ void initDepInject() {
 
   getIt.registerLazySingleton(() => SplashUsecase());
   getIt.registerLazySingleton(() => ChatUsecase(chatListRepoAbs: getIt()));
-  getIt.registerLazySingleton(
-      () => ChatDetailUsecase(chatDetailRepoAbs: getIt(), userUsecase: getIt()));
+  getIt.registerLazySingleton(() =>
+      ChatDetailUsecase(chatDetailRepoAbs: getIt(), userUsecase: getIt()));
   getIt.registerLazySingleton(() => ChatUtilUsecase(chatUserRepoAbs: getIt()));
   getIt.registerLazySingleton(
     () => AuthUsecase(
@@ -99,10 +99,14 @@ void initDepInject() {
     ),
   );
   getIt.registerLazySingleton<AuthRepoAbs>(
-    () => AuthFirebaseImpl(firebaseAuth: getIt()),
+    () => AuthFirebaseImpl(
+      firebaseAuth: getIt(),
+      firestore: getIt(),
+    ),
   );
   getIt.registerLazySingleton<UserRepoAbs>(
-    () => UserRepoImpl(firebaseAuth: getIt(), firestore: getIt(), firebaseMessaging: getIt()),
+    () => UserRepoImpl(
+        firebaseAuth: getIt(), firestore: getIt(), firebaseMessaging: getIt()),
   );
 
   //data_source

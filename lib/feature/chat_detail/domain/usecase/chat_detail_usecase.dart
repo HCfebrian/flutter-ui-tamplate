@@ -13,6 +13,9 @@ class ChatDetailUsecase {
   final ChatDetailRepoAbs chatDetailRepoAbs;
   final UserUsecase userUsecase;
 
+  bool nexPageBusy = false;
+  types.Room? currentRoom;
+
   StreamController<ChatStatus>? statusStream;
 
   bool isTyping = false;
@@ -24,6 +27,8 @@ class ChatDetailUsecase {
   });
 
   Stream<List<types.Message>> initStream(types.Room room) {
+    currentRoom = null;
+    currentRoom = room;
     return chatDetailRepoAbs.initStream(room);
   }
 
@@ -38,7 +43,6 @@ class ChatDetailUsecase {
       id: '',
       partialText: partialText,
     );
-
 
     final messageMap = message.toJson();
     messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
@@ -133,5 +137,17 @@ class ChatDetailUsecase {
       }
     });
     return statusStream!.stream;
+  }
+
+  Future nextPage() async {
+    if (!nexPageBusy) {
+      nexPageBusy = true;
+      await chatDetailRepoAbs.nextPage(
+        page: 2,
+        room: currentRoom!,
+      );
+      nexPageBusy = false;
+    }
+    return;
   }
 }

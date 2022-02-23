@@ -45,15 +45,14 @@ class ChatDetailDeleteEvent extends ChatDetailEvent {
   List<Object?> get props => [message];
 }
 
-class ChatSendMessageEvent extends ChatDetailEvent{
+class ChatSendMessageEvent extends ChatDetailEvent {
   final types.PartialText message;
   final types.Room room;
 
-  const ChatSendMessageEvent({required this.message,required this. room});
+  const ChatSendMessageEvent({required this.message, required this.room});
 
   @override
   List<Object?> get props => [message];
-
 }
 
 class ChatMarkAsReadEvent extends ChatDetailEvent {
@@ -69,3 +68,4 @@ class ChatMarkAsReadEvent extends ChatDetailEvent {
   List<Object?> get props => [message];
 }
 
+class ChatDetailNextPageEvent extends ChatDetailEvent {}

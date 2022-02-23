@@ -1,19 +1,23 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+
+// import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 
 class AuthFirebaseImpl implements AuthRepoAbs {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore;
 
   late StreamController<UserEntity> streamUserEntity;
 
-  AuthFirebaseImpl({required this.firebaseAuth});
+  AuthFirebaseImpl({required this.firebaseAuth, required this.firestore});
 
   @override
   Stream<UserEntity> initService() {
@@ -64,14 +68,22 @@ class AuthFirebaseImpl implements AuthRepoAbs {
       password: password,
     );
     print('user id registered as ${userCredential.user?.uid}');
-    await FirebaseChatCore.instance.createUserInFirestore(
-      types.User(
-        firstName: username,
-        id: userCredential.user!.uid,
-        imageUrl: 'https://i.pravatar.cc/300?u=$email',
-        lastName: '',
-      ),
-    );
+    firestore.doc('$USER_COLLECTION/${userCredential.user?.uid}').set(
+          types.User(
+            firstName: username,
+            id: userCredential.user!.uid,
+            imageUrl: 'https://i.pravatar.cc/300?u=$email',
+            lastName: '',
+          ).toJson(),
+        );
+    // await FirebaseChatCore.instance.createUserInFirestore(
+    //   types.User(
+    //     firstName: username,
+    //     id: userCredential.user!.uid,
+    //     imageUrl: 'https://i.pravatar.cc/300?u=$email',
+    //     lastName: '',
+    //   ),
+    // );
     return (userCredential.credential?.token).toString();
   }
 
@@ -90,13 +102,22 @@ class AuthFirebaseImpl implements AuthRepoAbs {
     );
     // Once signed in, return the UserCredential
     final result = await firebaseAuth.signInWithCredential(credential);
-    FirebaseChatCore.instance.createUserInFirestore(types.User(
-      firstName: result.user!.displayName,
-      id: result.user!.uid,
-      imageUrl: result.user!.photoURL,
-      lastName: '',
 
-    ));
+    firestore.doc('$USER_COLLECTION/${result.user?.uid}').set(
+          types.User(
+            firstName: result.user!.displayName,
+            id: result.user!.uid,
+            imageUrl: result.user!.photoURL,
+            lastName: '',
+          ).toJson(),
+        );
+
+    // FirebaseChatCore.instance.createUserInFirestore(types.User(
+    //   firstName: result.user!.displayName,
+    //   id: result.user!.uid,
+    //   imageUrl: result.user!.photoURL,
+    //   lastName: '',
+    // ));
     return result;
   }
 
@@ -118,6 +139,6 @@ class AuthFirebaseImpl implements AuthRepoAbs {
   @override
   Future logout() async {
     GoogleSignIn().signOut();
-    return  firebaseAuth.signOut();
+    return firebaseAuth.signOut();
   }
 }

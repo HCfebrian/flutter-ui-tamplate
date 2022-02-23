@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -38,13 +40,17 @@ class ChatUtilUsecase {
   static String getUnreadCount(List<QueryDocumentSnapshot<Object?>> docs) {
     int unreadMessage = 0;
     final meId = FirebaseAuth.instance.currentUser!.uid;
-    docs.forEach((element) {
-      final data = element.get('status');
-      final authorId = element.get('authorId');
-      if (data == 'delivered' && authorId != meId) {
-        unreadMessage = unreadMessage + 1;
-      }
-    });
+    try{
+      docs.forEach((element) {
+        final data = element.get('status');
+        final authorId = element.get('authorId');
+        if (data == 'delivered' && authorId != meId) {
+          unreadMessage = unreadMessage + 1;
+        }
+      });
+    }catch(e){
+      log("error get user count : "+ e.toString());
+    }
     return unreadMessage.toString();
   }
 }
