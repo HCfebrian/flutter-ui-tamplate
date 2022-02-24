@@ -111,13 +111,6 @@ class AuthFirebaseImpl implements AuthRepoAbs {
             lastName: '',
           ).toJson(),
         );
-
-    // FirebaseChatCore.instance.createUserInFirestore(types.User(
-    //   firstName: result.user!.displayName,
-    //   id: result.user!.uid,
-    //   imageUrl: result.user!.photoURL,
-    //   lastName: '',
-    // ));
     return result;
   }
 

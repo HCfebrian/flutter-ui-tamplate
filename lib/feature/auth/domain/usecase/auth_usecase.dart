@@ -1,11 +1,14 @@
 import 'package:simple_flutter/core/shared_feature/local_pref/domain/usecase/local_pref_usecase.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/auth_repo_abs.dart';
+import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 
 class AuthUsecase {
   final AuthRepoAbs authRepo;
+  final UserUsecase userUsecase;
   final LocalPrefUsecase localPrefUsecase;
 
   AuthUsecase({
+    required this.userUsecase,
     required this.authRepo,
     required this.localPrefUsecase,
   });
@@ -37,7 +40,8 @@ class AuthUsecase {
     return;
   }
 
-  Future logout() {
+  Future logout()async {
+    await userUsecase.setUserStatus(isUserOnline: false);
     authRepo.logout();
     return localPrefUsecase.deleteAuthToken();
   }

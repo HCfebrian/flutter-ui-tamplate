@@ -21,3 +21,11 @@ class _UserGetUpdatedEvent extends UserEvent {
 }
 
 class UserLoggedOutEvent extends UserEvent {}
+class UserSetOnlineStatusEvent extends UserEvent {
+  final bool isUserOnline;
+
+  const UserSetOnlineStatusEvent({required this.isUserOnline});
+  
+  @override
+  List<Object?> get props => [isUserOnline];
+}

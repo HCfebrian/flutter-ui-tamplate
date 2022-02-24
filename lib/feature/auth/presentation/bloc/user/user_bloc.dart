@@ -41,6 +41,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoggedOutState());
     });
 
+    on<UserSetOnlineStatusEvent>((event, emit) async {
+      userUsecase.setUserStatus(isUserOnline: event.isUserOnline);
+    });
+
     on<UserStateStreamInitEvent>(
       (event, emit) async {
         userUsecase.getUserDataStream().listen(
@@ -53,12 +57,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<_UserGetUpdatedEvent>((event, emit) async {
       if (event.userEntity != null) {
-        log("user entity exist");
+        log('user entity exist');
         userUsecase.registerFcmToken(userId: event.userEntity!.id);
+        userUsecase.handleUserOnlineStatus();
         emit(UserLoggedInState(userEntity: event.userEntity!));
       } else {
         userUsecase.refreshFcmToken();
-        log("user not exist");
+        log('user not exist');
         emit(UserLoggedOutState());
       }
     });

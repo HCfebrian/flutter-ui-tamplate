@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -64,6 +65,7 @@ void initDepInject() {
     () => AuthUsecase(
       authRepo: getIt(),
       localPrefUsecase: getIt(),
+      userUsecase: getIt(),
     ),
   );
   getIt.registerLazySingleton(() => LocalPrefUsecase(localPrefAbs: getIt()));
@@ -106,7 +108,11 @@ void initDepInject() {
   );
   getIt.registerLazySingleton<UserRepoAbs>(
     () => UserRepoImpl(
-        firebaseAuth: getIt(), firestore: getIt(), firebaseMessaging: getIt()),
+      firebaseAuth: getIt(),
+      firestore: getIt(),
+      firebaseMessaging: getIt(),
+      database: getIt(),
+    ),
   );
 
   //data_source
@@ -136,6 +142,7 @@ void initDepInject() {
   getIt.registerLazySingleton(() => FirebaseFirestore.instance);
   getIt.registerLazySingleton(() => FirebaseStorage.instance);
   getIt.registerLazySingleton(() => FirebaseMessaging.instance);
+  getIt.registerLazySingleton(() => FirebaseDatabase.instance);
   // getIt.registerLazySingleton(
   //       () => Dio(
   //     BaseOptions(baseUrl: FlavorConfig.instance.values.baseUrl),
