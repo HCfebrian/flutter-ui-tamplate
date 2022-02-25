@@ -20,7 +20,8 @@ class ChatDetailUsecase {
 
   StreamController<ChatStatus>? statusStream;
 
-  bool isTyping = false;
+  bool isUserTyping = false;
+  bool isUserOnline = false;
   DateTime? lastTypingDate;
 
   ChatDetailUsecase({
@@ -34,7 +35,7 @@ class ChatDetailUsecase {
     return chatDetailRepoAbs.initStream(room);
   }
 
-  Future addMessageToDb({
+  Future sendTextMsg({
     required types.PartialText partialText,
     required types.Room roomId,
   }) async {
@@ -127,9 +128,9 @@ class ChatDetailUsecase {
     required types.Room room,
     required String myUserId,
   }) async {
-    if (!isTyping) {
-      print("typing bosku " + myUserId.toString());
-      isTyping = true;
+    if (!isUserTyping) {
+      print('typing user $myUserId');
+      isUserTyping = true;
       chatDetailRepoAbs.setTypingStatusDate(
         date: DateTime.now(),
         room: room,
@@ -138,7 +139,7 @@ class ChatDetailUsecase {
       Future.delayed(const Duration(seconds: TYPING_DEBAUCE_DURATION))
           .then((value) {
         statusStream!.add(ChatStatus.offline);
-        isTyping = false;
+        isUserTyping = false;
       });
     }
   }
@@ -150,16 +151,36 @@ class ChatDetailUsecase {
     statusStream?.close();
     statusStream = null;
     statusStream ??= StreamController();
+    isUserOnline = false;
+
+
+    chatDetailRepoAbs
+        .startOnlineStatusStream(room: room, otherUserId: otherUserId)
+        .listen((isOnline) {
+          if(isOnline){
+            isUserOnline = true;
+            statusStream!.add(ChatStatus.online);
+          }else{
+            isUserOnline = false;
+            statusStream!.add(ChatStatus.offline);
+          }
+    });
+
     chatDetailRepoAbs
         .startLastTypingStream(room: room, otherUserId: otherUserId)
-        .listen((event) {
+        .listen((lastTypeDate) {
       final now = DateTime.now();
-      if (now.difference(event) <
+      if (now.difference(lastTypeDate) <
           const Duration(seconds: TYPING_DEBAUCE_DURATION)) {
         statusStream!.add(ChatStatus.typing);
         Future.delayed(const Duration(seconds: TYPING_DEBAUCE_DURATION))
             .then((value) {
-          statusStream!.add(ChatStatus.offline);
+          isUserTyping = false;
+          if (isUserOnline) {
+            statusStream!.add(ChatStatus.online);
+          } else {
+            statusStream!.add(ChatStatus.offline);
+          }
         });
       }
     });

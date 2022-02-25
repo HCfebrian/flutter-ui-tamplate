@@ -24,7 +24,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     on<ChatSendMessageEvent>(
       (event, emit) {
         log("bloc run");
-        chatDetailUsecase.addMessageToDb(
+        chatDetailUsecase.sendTextMsg(
           partialText: event.message,
           roomId: event.room,
         );

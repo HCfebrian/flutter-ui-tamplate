@@ -40,6 +40,11 @@ abstract class ChatDetailRepoAbs {
     required String otherUserId,
   });
 
+  Stream<bool> startOnlineStatusStream({
+    required types.Room room,
+    required String otherUserId,
+  });
+
   Future markAsRead({
     required types.Message message,
     required types.Room room,

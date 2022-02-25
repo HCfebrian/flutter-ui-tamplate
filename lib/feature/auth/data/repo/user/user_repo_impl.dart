@@ -8,7 +8,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/auth/domain/contract_repo/user_repo_abs.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
-import 'package:simple_flutter/utils/route_generator.dart';
 
 class UserRepoImpl implements UserRepoAbs {
   final FirebaseAuth firebaseAuth;
@@ -69,7 +68,6 @@ class UserRepoImpl implements UserRepoAbs {
   @override
   Future listenOnlineStatus({required String userId}) async {
     log("handle user online status repo");
-    final userStatusFirestoreRef = firestore.doc('$USER_COLLECTION/$userId');
     final userStatusDatabaseRef = database.ref('/status/$userId');
 
     final isOfflineForDatabase = {

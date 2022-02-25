@@ -17,6 +17,7 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
   StreamController<List<types.Message>>? messageStream;
   StreamSubscription? dbRealtimeStream;
   StreamController<DateTime>? lastTypingStream;
+  StreamController<bool>? onlineStatusStream;
   final fetchCount = 20;
   int limit = 20;
 
@@ -180,6 +181,27 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
     await reference.putFile(file);
     final uri = await reference.getDownloadURL();
     return uri;
+  }
+
+  @override
+  Stream<bool> startOnlineStatusStream(
+      {required types.Room room, required String otherUserId}) {
+    onlineStatusStream?.close();
+    onlineStatusStream = null;
+    onlineStatusStream ??= StreamController();
+
+    firestore
+        .collection(USER_COLLECTION)
+        .doc(otherUserId)
+        .snapshots()
+        .listen((event) {
+      if (event.exists &&
+          event.data() != null &&
+          event.data()!['state'] != null) {
+        onlineStatusStream!.add(event.data()!['state'] == 'online');
+      }
+    });
+    return onlineStatusStream!.stream;
   }
 
 // @override

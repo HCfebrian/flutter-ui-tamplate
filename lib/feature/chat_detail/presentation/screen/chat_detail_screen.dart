@@ -316,6 +316,12 @@ class _ChatDetailState extends State<ChatDetail> {
                       style: TextStyle(fontSize: 10),
                     );
                   }
+                  if (state.chatStatus == ChatStatus.online) {
+                    return const Text(
+                      'online',
+                      style: TextStyle(fontSize: 10),
+                    );
+                  }
                   if (state.chatStatus == ChatStatus.offline) {
                     return const SizedBox();
                   }

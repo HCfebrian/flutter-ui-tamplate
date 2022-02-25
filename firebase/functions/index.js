@@ -92,10 +92,7 @@ exports.notifyNewMessage = functions.firestore
                     })
                 })
                 });
-                              
-
               }
-
             });
         })
     })
