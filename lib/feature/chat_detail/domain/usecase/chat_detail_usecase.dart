@@ -38,6 +38,10 @@ class ChatDetailUsecase {
   Future sendTextMsg({
     required types.PartialText partialText,
     required types.Room roomId,
+    String? replayRefId,
+    String? replayType,
+    String? replayContent,
+    String? replayToAuthorName,
   }) async {
     log('Send message');
     final user = await userUsecase.getUserData();
@@ -52,6 +56,12 @@ class ChatDetailUsecase {
     messageMap['authorId'] = user.id;
     messageMap['createdAt'] = FieldValue.serverTimestamp();
     messageMap['updatedAt'] = FieldValue.serverTimestamp();
+    messageMap['metadata'] = {
+      'replayTo': replayRefId,
+      'replayType': replayType,
+      'replayContent': replayContent,
+      'replayToAuthorName': replayToAuthorName,
+    };
 
     log("usecase send message data : $messageMap");
     log("room : " + roomId.id);
@@ -153,17 +163,16 @@ class ChatDetailUsecase {
     statusStream ??= StreamController();
     isUserOnline = false;
 
-
     chatDetailRepoAbs
         .startOnlineStatusStream(room: room, otherUserId: otherUserId)
         .listen((isOnline) {
-          if(isOnline){
-            isUserOnline = true;
-            statusStream!.add(ChatStatus.online);
-          }else{
-            isUserOnline = false;
-            statusStream!.add(ChatStatus.offline);
-          }
+      if (isOnline) {
+        isUserOnline = true;
+        statusStream!.add(ChatStatus.online);
+      } else {
+        isUserOnline = false;
+        statusStream!.add(ChatStatus.offline);
+      }
     });
 
     chatDetailRepoAbs

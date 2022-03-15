@@ -22,17 +22,21 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     });
 
     on<ChatSendMessageEvent>(
-      (event, emit) {
+          (event, emit) {
         log("bloc run");
         chatDetailUsecase.sendTextMsg(
-          partialText: event.message,
-          roomId: event.room,
+            partialText: event.message,
+            roomId: event.room,
+            replayRefId: event.replayRef,
+            replayType: event.replayType,
+            replayContent: event.replayContent,
+            replayToAuthorName: event.replayToAuthor
         );
       },
     );
 
     on<ChatDetailInitStreamEvent>(
-      (event, emit) {
+          (event, emit) {
         add(const ChatDetailDisplayMessageEvent(listMessage: []));
         if (chatStream != null) {
           chatStream!.cancel();
@@ -42,28 +46,28 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         final meUser = FirebaseAuth.instance.currentUser;
         chatStream =
             chatDetailUsecase.initStream(event.room).listen((messages) {
-          messages.forEach(
-            (element) {
-              if (element.status != types.Status.seen &&
-                  element.author.id != meUser!.uid) {
-                print("change status");
-                chatDetailUsecase.markAsRead(
-                    message: element, room: event.room);
-              }
-              // else if (element.author.id == meUser!.uid &&
-              //     element.status != types.Status.seen) {
-              //   chatDetailUsecase.markAsDelivered(
-              //       message: element, room: event.room);
-              // }
-            },
-          );
-          add(ChatDetailDisplayMessageEvent(listMessage: messages));
-        });
+              messages.forEach(
+                    (element) {
+                  if (element.status != types.Status.seen &&
+                      element.author.id != meUser!.uid) {
+                    print("change status");
+                    chatDetailUsecase.markAsRead(
+                        message: element, room: event.room);
+                  }
+                  // else if (element.author.id == meUser!.uid &&
+                  //     element.status != types.Status.seen) {
+                  //   chatDetailUsecase.markAsDelivered(
+                  //       message: element, room: event.room);
+                  // }
+                },
+              );
+              add(ChatDetailDisplayMessageEvent(listMessage: messages));
+            });
       },
     );
 
     on<ChatDetailDisposeEvent>(
-      (event, emit) {
+          (event, emit) {
         if (chatStream != null) {
           chatStream!.cancel();
           chatStream = null;
@@ -74,7 +78,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     );
 
     on<ChatDetailDisplayMessageEvent>(
-      (event, emit) {
+          (event, emit) {
         print("display message");
         emit(ChatDetailLoadingState());
         emit(ChatDetailLoadedState(listMessage: event.listMessage));
@@ -82,14 +86,14 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     );
 
     on<ChatDetailDeleteEvent>(
-      (event, emit) {
+          (event, emit) {
         chatDetailUsecase.deleteMessage(
             message: event.message, room: event.room);
       },
     );
 
     on<ChatMarkAsReadEvent>(
-      (event, emit) {
+          (event, emit) {
         chatDetailUsecase.markAsRead(
           message: event.message,
           room: event.room,
@@ -98,13 +102,13 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
     );
 
     on<ChatDetailNextPageEvent>(
-      (event, emit) {
+          (event, emit) {
         chatDetailUsecase.nextPage();
       },
     );
 
     on<ChatDetailSendImageEvent>(
-      (event, emit) {
+          (event, emit) {
         try {
           chatDetailUsecase.sendImageMsg(
               path: event.filePath, room: event.room, fileName: event.fileName);

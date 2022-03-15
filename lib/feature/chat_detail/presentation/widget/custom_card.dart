@@ -111,9 +111,14 @@ class CustomCard extends StatelessWidget {
                   if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
                   }
-                  final count = ChatUtilUsecase.getUnreadCount(
-                    snapshot.data!.docs,
-                  );
+                  String count = "0";
+                  try {
+                    final count = ChatUtilUsecase.getUnreadCount(
+                      snapshot.data!.docs,
+                    );
+                  } catch (e) {
+                    print(e.toString());
+                  }
                   if (count == '0') {
                     return const SizedBox();
                   }

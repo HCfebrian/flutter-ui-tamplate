@@ -35,6 +35,7 @@ class RouteGenerator {
             name: ((settings.arguments! as Map)['name']).toString(),
             room: (settings.arguments! as Map)['room'] as types.Room,
             myUserId: ((settings.arguments! as Map)['myUserId']).toString(),
+            myUsername: ((settings.arguments! as Map)['myUsername']).toString(),
           ),
         );
       default:

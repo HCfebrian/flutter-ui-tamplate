@@ -48,11 +48,29 @@ class ChatDetailDeleteEvent extends ChatDetailEvent {
 class ChatSendMessageEvent extends ChatDetailEvent {
   final types.PartialText message;
   final types.Room room;
+  final String? replayRef;
+  final String? replayType;
+  final String? replayContent;
+  final String? replayToAuthor;
 
-  const ChatSendMessageEvent({required this.message, required this.room});
+  const ChatSendMessageEvent({
+    required this.message,
+    required this.room,
+    this.replayRef,
+    this.replayType,
+    this.replayContent,
+    this.replayToAuthor,
+  });
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [
+        message,
+        room,
+        replayRef,
+        replayContent,
+        replayType,
+        replayToAuthor,
+      ];
 }
 
 class ChatMarkAsReadEvent extends ChatDetailEvent {
