@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,47 @@ class _MessagesListState extends State<MessagesList> {
   UserEntity? myUserEntity;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      log("check permission");
+      if (!isAllowed) {
+        log("check permission failed");
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        // This is very important to not harm the user experience
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Izinkan Aplikasi untuk menampilkan Notifikasi?"),
+            actions: [
+              GestureDetector(
+                child: Text("Tidak"),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              GestureDetector(
+                child: Text("OK"),
+                onTap: () {
+                  AwesomeNotifications()
+                      .requestPermissionToSendNotifications()
+                      .then(
+                        (value) => Navigator.pop(context),
+                      );
+                },
+              )
+            ],
+          ),
+        );
+      } else {
+        log("check permission success");
+      }
+    });
     return WillPopScope(
       onWillPop: () async => false,
       child: BlocBuilder<UserBloc, UserState>(

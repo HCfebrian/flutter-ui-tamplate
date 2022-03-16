@@ -74,7 +74,10 @@ exports.notifyNewMessage = functions.firestore
                     },
                     data: {
                         AUTHOR_ID: authorId,
-                        ROOM_ID: roomId
+                        ROOM_ID: roomId,
+                        SENDER_NAME: senderName,
+                        BODY: notificationBody
+
                     }
                 }
                   return admin.messaging().sendToDevice(fcmToken, payload).then( response => {

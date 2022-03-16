@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +43,7 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('ini room id $roomId');
+    log('ini room id $roomId');
     return Column(
       children: [
         ListTile(
@@ -71,20 +73,20 @@ class CustomCard extends StatelessWidget {
                     .orderBy('updatedAt', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  print('mobile room id ${roomId}');
+                  log('mobile room id ${roomId}');
                   if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
                   } else {
                     QueryDocumentSnapshot<Object?>? result;
                     try {
                       result = snapshot.data?.docs.lastWhere((element) {
-                        return (element.data() as Map)['metadata'] == null ||
-                            (element.data() as Map)['metadata'][
-                                    'isDeleted-${FirebaseAuth.instance.currentUser?.uid}'] ==
-                                false;
+                        return (element.data() as Map)['metadata'][
+                                'isDeleted-${FirebaseAuth.instance.currentUser?.uid}'] ==
+                            null;
                       });
-                    } catch (e) {
-                      print(e);
+                    } catch (e, s) {
+                      log(e.toString());
+                      log(s.toString());
                     }
                     return Text(
                       (result == null)
@@ -107,7 +109,7 @@ class CustomCard extends StatelessWidget {
                     .orderBy('updatedAt', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  print('mobile room id ${roomId}');
+                  log('mobile room id ${roomId}');
                   if (snapshot.data?.docs.length == 0) {
                     return const SizedBox();
                   }
@@ -117,7 +119,7 @@ class CustomCard extends StatelessWidget {
                       snapshot.data!.docs,
                     );
                   } catch (e) {
-                    print(e.toString());
+                    log(e.toString());
                   }
                   if (count == '0') {
                     return const SizedBox();

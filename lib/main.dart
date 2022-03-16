@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dar
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscreen_bloc.dart';
 import 'package:simple_flutter/get_it.dart';
 import 'package:simple_flutter/translations/codegen_loader.g.dart';
@@ -20,6 +22,7 @@ Future<void> mainInit() async {
 
   initDepInject();
   await Firebase.initializeApp();
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en')],
@@ -31,7 +34,26 @@ Future<void> mainInit() async {
   );
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    AwesomeNotifications()
+        .actionStream
+        .listen((ReceivedNotification receivedNotification) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const MessagesList(),
+        ),
+      );
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

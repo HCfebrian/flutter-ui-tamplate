@@ -55,6 +55,8 @@ dependencies:
   firebase_messaging: ^11.2.6
   firebase_database: ^9.0.6
   swipe_to: ^1.0.1
+  flutter_local_notifications: ^9.4.0
+  awesome_notifications: ^0.6.21
 
 
 dev_dependencies:

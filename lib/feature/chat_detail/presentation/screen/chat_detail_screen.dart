@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bubble/bubble.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -273,6 +274,8 @@ class _ChatDetailState extends State<ChatDetail> {
   }
 
   Future<void> _handleSendPressed(types.PartialText message) async {
+
+
     log("handlesendpress");
     log("message ${message.toJson()}");
     log("room ${widget.room.id}");
