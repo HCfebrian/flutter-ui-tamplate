@@ -39,18 +39,18 @@ class ChatUtilUsecase {
 
   static String getUnreadCount(List<QueryDocumentSnapshot<Object?>> docs) {
     int unreadMessage = 0;
-    // final meId = FirebaseAuth.instance.currentUser!.uid;
-    // try{
-    //   docs.forEach((element) {
-    //     final data = element.get('status');
-    //     final authorId = element.get('authorId');
-    //     if (data == 'delivered' && authorId != meId) {
-    //       unreadMessage = unreadMessage + 1;
-    //     }
-    //   });
-    // }catch(e){
-    //   log("error get user count : "+ e.toString());
-    // }
+    final meId = FirebaseAuth.instance.currentUser!.uid;
+    try{
+      docs.forEach((element) {
+        final data = element.get('status');
+        final authorId = element.get('authorId');
+        if (data == 'delivered' && authorId != meId) {
+          unreadMessage = unreadMessage + 1;
+        }
+      });
+    }catch(e){
+      log("error get user count : "+ e.toString());
+    }
     return unreadMessage.toString();
   }
 }

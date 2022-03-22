@@ -115,7 +115,7 @@ class CustomCard extends StatelessWidget {
                   }
                   String count = "0";
                   try {
-                    final count = ChatUtilUsecase.getUnreadCount(
+                    count = ChatUtilUsecase.getUnreadCount(
                       snapshot.data!.docs,
                     );
                   } catch (e) {
