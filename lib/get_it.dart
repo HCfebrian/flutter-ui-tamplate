@@ -26,6 +26,7 @@ import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_det
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_loading_indicator/chat_loading_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/data/repo/chat_list_repo_impl.dart';
 import 'package:simple_flutter/feature/chat_list/domain/contract_repo/chat_repo.dart';
 import 'package:simple_flutter/feature/chat_list/domain/usecase/chat_usecase.dart';
@@ -41,9 +42,15 @@ final getIt = GetIt.instance;
 void initDepInject() {
 // Feature
   //bloc
+  getIt.registerFactory(() => ChatLoadingBloc());
   getIt.registerFactory(() => SplashScreenBloc(splashUsecase: getIt()));
   getIt.registerFactory(() => AuthBloc(authUsecase: getIt()));
-  getIt.registerFactory(() => ChatDetailBloc(chatDetailUsecase: getIt()));
+  getIt.registerFactory(
+    () => ChatDetailBloc(
+      chatDetailUsecase: getIt(),
+      chatLoadingBloc: getIt(),
+    ),
+  );
   getIt.registerFactory(() => ChatDetailStatusBloc(chatDetailUsecase: getIt()));
   getIt.registerFactory(() => ChatListBloc(chatUsecase: getIt()));
   getIt.registerFactory(
@@ -82,7 +89,8 @@ void initDepInject() {
   // repo
 
   getIt.registerLazySingleton<ChatDetailRepoAbs>(
-    () => ChatDetailRepoImpl(firestore: getIt(), firebaseStorage: getIt()),
+    () => ChatDetailRepoImpl(
+        firestore: getIt(), firebaseStorage: getIt(), dio: getIt()),
   );
   getIt.registerLazySingleton<ChatListRepoAbs>(
     () => ChatListRepoImpl(
@@ -134,7 +142,7 @@ void initDepInject() {
 
   getIt.registerLazySingleton(
     () => Dio(
-      BaseOptions(baseUrl: FlavorConfig.instance.values.baseUrl),
+      BaseOptions(),
     ),
   );
 
@@ -144,7 +152,7 @@ void initDepInject() {
   getIt.registerLazySingleton(() => FirebaseMessaging.instance);
   getIt.registerLazySingleton(() => FirebaseDatabase.instance);
   // getIt.registerLazySingleton(
-  //       () => Dio(
+  //   () => Dio(
   //     BaseOptions(baseUrl: FlavorConfig.instance.values.baseUrl),
   //   ),
   // );

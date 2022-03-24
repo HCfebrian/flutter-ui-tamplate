@@ -14,17 +14,18 @@ void main() {
   ); // Add Flavor base Url
 
   AwesomeNotifications().initialize(
-    // set the icon to null if you want to use the default app icon
+      // set the icon to null if you want to use the default app icon
       null,
       [
         NotificationChannel(
-            channelGroupKey: 'chat_channel_group',
-            channelKey: 'chat_channel',
-            groupKey: "chat_group",
-            channelName: 'chat notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: Color(0xFF9D50DD),
-            ledColor: Colors.white)
+          channelGroupKey: 'chat_channel_group',
+          channelKey: 'chat_channel',
+          groupKey: 'chat_group',
+          channelName: 'chat notifications',
+          channelDescription: 'Notification channel for basic tests',
+          defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+        )
       ],
       // Channel groups are only visual and are not required
       channelGroups: [

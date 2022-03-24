@@ -32,9 +32,9 @@ class _MessagesListState extends State<MessagesList> {
   @override
   Widget build(BuildContext context) {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      log("check permission");
+      log('check permission');
       if (!isAllowed) {
-        log("check permission failed");
+        log('check permission failed');
         // This is just a basic example. For real apps, you must show some
         // friendly dialog box before call the request method.
         // This is very important to not harm the user experience
@@ -71,7 +71,7 @@ class _MessagesListState extends State<MessagesList> {
       child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if (state is UserLoggedInState) {
-            print("current user " + state.userEntity.firstName);
+            log('current user ${state.userEntity.firstName}');
             myUserEntity = state.userEntity;
           }
           if (state is UserLoggedOutState) {

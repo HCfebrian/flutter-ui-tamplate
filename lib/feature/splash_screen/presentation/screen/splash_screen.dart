@@ -17,29 +17,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    log("message background ${message.data} ");
+
+    if (message.notification != null) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: DateTime.now().microsecond,
+          channelKey: 'chat_channel',
+          groupKey: "chat_group",
+          displayOnBackground: true,
+          displayOnForeground: false,
+          title: "${message.notification?.title}",
+          body: "${message.notification?.body}",
+        ),
+      );
+      log('Message also contained a notification: ${message.notification!.title.toString()}');
+    }
+  }
+
   @override
   void initState() {
     BlocProvider.of<SplashScreenBloc>(context).add(SplashScreenInitEvent());
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log('Got a message whilst in the foreground!');
-      log('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: DateTime.now().microsecond,
-                channelKey: 'chat_channel',
-                title: "${message.notification?.title}",
-                body: "${message.notification?.body}",
-                groupKey: "chat_group"
-
-            )
-        );
-
-        log('Message also contained a notification: ${message.notification!.title.toString()}');
-
-      }
-    });
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     super.initState();
   }
 

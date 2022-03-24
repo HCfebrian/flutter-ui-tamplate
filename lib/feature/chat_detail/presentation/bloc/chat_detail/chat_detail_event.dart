@@ -18,8 +18,9 @@ class ChatDetailInitStreamEvent extends ChatDetailEvent {
 
 class ChatDetailDisplayMessageEvent extends ChatDetailEvent {
   final List<types.Message> listMessage;
+  final bool isLoading;
 
-  const ChatDetailDisplayMessageEvent({required this.listMessage});
+  const ChatDetailDisplayMessageEvent( {required this.listMessage, required this.isLoading,});
 
   @override
   List<Object?> get props => [];

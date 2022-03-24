@@ -94,22 +94,23 @@ class ChatDetailUsecase {
     final user = await userUsecase.getUserData();
     final uri = await chatDetailRepoAbs.uploadImageStorage(
         file: file, fileName: fileName);
-    print('uri $uri');
-    final message = types.PartialImage(
-      height: image.height.toDouble(),
-      name: fileName,
-      size: size,
-      uri: uri,
-      width: image.width.toDouble(),
-    );
-    final messageMap = message.toJson();
-    messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
-    messageMap['authorId'] = user?.id;
-    messageMap['createdAt'] = FieldValue.serverTimestamp();
-    messageMap['updatedAt'] = FieldValue.serverTimestamp();
-    messageMap['type'] = 'image';
+    if (uri != null || uri!.isNotEmpty) {
+      final message = types.PartialImage(
+        height: image.height.toDouble(),
+        name: fileName,
+        size: size,
+        uri: uri,
+        width: image.width.toDouble(),
+      );
+      final messageMap = message.toJson();
+      messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+      messageMap['authorId'] = user?.id;
+      messageMap['createdAt'] = FieldValue.serverTimestamp();
+      messageMap['updatedAt'] = FieldValue.serverTimestamp();
+      messageMap['type'] = 'image';
 
-    chatDetailRepoAbs.sendMessage(message: messageMap, room: room);
+      chatDetailRepoAbs.sendMessage(message: messageMap, room: room);
+    }
   }
 
   Future deleteMessage(

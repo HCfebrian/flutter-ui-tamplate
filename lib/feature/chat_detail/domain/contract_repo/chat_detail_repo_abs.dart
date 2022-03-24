@@ -17,7 +17,7 @@ abstract class ChatDetailRepoAbs {
     required types.Room room,
   });
 
-  Future<String> uploadImageStorage({required File file, required String fileName});
+  Future<String?> uploadImageStorage({required File file, required String fileName});
 
   Future deleteImageStorage({
     required types.ImageMessage message,
