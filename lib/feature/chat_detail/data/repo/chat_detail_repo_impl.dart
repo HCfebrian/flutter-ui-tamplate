@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math' as math;
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -187,8 +189,23 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
       final base64Str = base64Encode(bytes);
       FormData formData = new FormData.fromMap({"source": base64Str});
       final response = await dio.post(
-          "https://freeimage.host/api/1/upload?key=6d207e02198a847aa98d0a2a901485a5",
-          data: formData);
+        "https://freeimage.host/api/1/upload?key=6d207e02198a847aa98d0a2a901485a5",
+        data: formData,
+        onSendProgress: (int sent, int total) {
+          log('total ${sent / total}');
+          log('total $sent to $total}');
+          AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: 69,
+              channelKey: "chat_channel",
+              title: 'Upload in progress ($sent of $total)',
+              body: fileName,
+              notificationLayout: NotificationLayout.ProgressBar,
+              progress: math.min((sent / total * 100).round(), 100),
+            ),
+          );
+        },
+      );
       uri = response.data["image"]["url"] as String;
       log("uri ${response.data["image"]["url"]}");
     } catch (e, s) {

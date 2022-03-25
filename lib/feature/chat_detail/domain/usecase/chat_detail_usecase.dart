@@ -122,6 +122,7 @@ class ChatDetailUsecase {
       messageMap['createdAt'] = FieldValue.serverTimestamp();
       messageMap['updatedAt'] = FieldValue.serverTimestamp();
       messageMap['type'] = 'image';
+      messageMap['metadata'] = {};
 
       chatDetailRepoAbs.sendMessage(message: messageMap, room: room);
     }

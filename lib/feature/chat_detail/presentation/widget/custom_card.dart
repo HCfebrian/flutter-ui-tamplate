@@ -143,6 +143,7 @@ class CustomCard extends StatelessWidget {
                   );
                 },
               ),
+
             ],
           ),
           trailing: Text(chatModel.time),
