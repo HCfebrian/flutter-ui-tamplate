@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
+import 'package:simple_flutter/feature/broadcast/presentation/screen/broadcast_detail_screen.dart';
 import 'package:simple_flutter/utils/background_utils.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
@@ -22,6 +23,12 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   String? myUserId;
   bool isBroadcast = false;
+
+  @override
+  void initState() {
+    listUserBroadcastId.clear();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +106,23 @@ class _UsersPageState extends State<UsersPage> {
                         ? GestureDetector(
                             onTap: () {
                               log(listUserBroadcastId.length.toString());
+                              if (listUserBroadcastId.isNotEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        BroadcastDetailScreen(
+                                      listUserBroadcast: listUserBroadcastId,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                const snackBar = SnackBar(
+                                  content: Text('Choose user'),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              }
                             },
                             child: const Padding(
                               padding: EdgeInsets.all(20),
@@ -127,10 +151,10 @@ class ContactTileWidget extends StatefulWidget {
   final bool isBroadcast;
 
   const ContactTileWidget({
-    Key? key,
+    required this.isBroadcast,
     required this.otherUser,
     required this.myUserId,
-    required this.isBroadcast,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -210,7 +234,10 @@ class _ContactTileWidgetState extends State<ContactTileWidget> {
 class BuildAvatarWidget extends StatefulWidget {
   final types.User user;
 
-  const BuildAvatarWidget({Key? key, required this.user}) : super(key: key);
+  const BuildAvatarWidget({
+    required this.user,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<BuildAvatarWidget> createState() => _BuildAvatarWidgetState();

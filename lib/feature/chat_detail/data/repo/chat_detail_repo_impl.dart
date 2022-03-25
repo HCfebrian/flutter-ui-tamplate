@@ -130,11 +130,11 @@ class ChatDetailRepoImpl implements ChatDetailRepoAbs {
 
   @override
   Future sendMessage(
-      {required Map<String, dynamic> message, required types.Room room}) async {
+      {required Map<String, dynamic> message, required String roomId}) async {
     log('send message data layer : $message');
     try {
       return firestore
-          .collection('$ROOM_COLLECTION/${room.id}/messages')
+          .collection('$ROOM_COLLECTION/${roomId}/messages')
           .add(message);
     } catch (e) {
       log('error firebase $e');

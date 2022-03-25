@@ -31,7 +31,7 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
         log("bloc run");
         chatDetailUsecase.sendTextMsg(
             partialText: event.message,
-            roomId: event.room,
+            roomId: event.room.id,
             replayRefId: event.replayRef,
             replayType: event.replayType,
             replayContent: event.replayContent,

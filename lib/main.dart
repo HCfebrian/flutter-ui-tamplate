@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
+import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_loading_indicator/chat_loading_bloc.dart';
@@ -60,6 +61,9 @@ class _MainAppState extends State<MainApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ChatLoadingBloc>(
+          create: (context) => getIt(),
+        ),
+        BlocProvider<BroadcastBloc>(
           create: (context) => getIt(),
         ),
         BlocProvider<SplashScreenBloc>(

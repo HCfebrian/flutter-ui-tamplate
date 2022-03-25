@@ -37,7 +37,7 @@ class ChatDetailUsecase {
 
   Future sendTextMsg({
     required types.PartialText partialText,
-    required types.Room roomId,
+    required String roomId,
     String? replayRefId,
     String? replayType,
     String? replayContent,
@@ -64,9 +64,8 @@ class ChatDetailUsecase {
     };
 
     log("usecase send message data : $messageMap");
-    log("room : " + roomId.id);
 
-    chatDetailRepoAbs.sendMessage(message: messageMap, room: roomId);
+    chatDetailRepoAbs.sendMessage(message: messageMap, roomId: roomId);
   }
 
   Future addToSenderContact({
@@ -124,7 +123,7 @@ class ChatDetailUsecase {
       messageMap['type'] = 'image';
       messageMap['metadata'] = {};
 
-      chatDetailRepoAbs.sendMessage(message: messageMap, room: room);
+      chatDetailRepoAbs.sendMessage(message: messageMap, roomId: room.id);
     }
   }
 

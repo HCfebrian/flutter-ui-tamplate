@@ -21,6 +21,8 @@ import 'package:simple_flutter/feature/auth/domain/usecase/auth_usecase.dart';
 import 'package:simple_flutter/feature/auth/domain/usecase/user_usecase.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
+import 'package:simple_flutter/feature/broadcast/broadcast_usecase/broadcast_usecase.dart';
+import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/data/repo/chat_detail_repo_impl.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
@@ -43,6 +45,7 @@ void initDepInject() {
 // Feature
   //bloc
   getIt.registerFactory(() => ChatLoadingBloc(chatUsecase: getIt()));
+  getIt.registerFactory(() => BroadcastBloc(broadcastUsecase: getIt()));
   getIt.registerFactory(() => SplashScreenBloc(splashUsecase: getIt()));
   getIt.registerFactory(() => AuthBloc(authUsecase: getIt()));
   getIt.registerFactory(
@@ -64,6 +67,8 @@ void initDepInject() {
   //UseCase
 
   getIt.registerLazySingleton(() => SplashUsecase());
+  getIt.registerLazySingleton(
+      () => BroadcastUsecase(chatDetailUsecase: getIt()));
   getIt.registerLazySingleton(() => ChatUsecase(chatListRepoAbs: getIt()));
   getIt.registerLazySingleton(() =>
       ChatDetailUsecase(chatDetailRepoAbs: getIt(), userUsecase: getIt()));

@@ -9,7 +9,7 @@ abstract class ChatDetailRepoAbs {
 
   Future sendMessage({
     required Map<String, dynamic> message,
-    required types.Room room,
+    required String roomId,
   });
 
   Future deleteMessage({
