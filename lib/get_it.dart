@@ -42,7 +42,7 @@ final getIt = GetIt.instance;
 void initDepInject() {
 // Feature
   //bloc
-  getIt.registerFactory(() => ChatLoadingBloc());
+  getIt.registerFactory(() => ChatLoadingBloc(chatUsecase: getIt()));
   getIt.registerFactory(() => SplashScreenBloc(splashUsecase: getIt()));
   getIt.registerFactory(() => AuthBloc(authUsecase: getIt()));
   getIt.registerFactory(

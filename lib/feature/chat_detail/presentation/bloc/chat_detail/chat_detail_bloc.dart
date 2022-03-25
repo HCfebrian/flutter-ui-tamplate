@@ -116,21 +116,21 @@ class ChatDetailBloc extends Bloc<ChatDetailEvent, ChatDetailState> {
       },
     );
 
-    on<ChatDetailSendImageEvent>(
-      (event, emit) async {
-        try {
-          chatLoadingBloc.add(const ChatLoadingSetDataEvent(isLoading: true));
-
-          await chatDetailUsecase.sendImageMsg(
-            path: event.filePath,
-            room: event.room,
-            fileName: event.fileName,
-          );
-          chatLoadingBloc.add(const ChatLoadingSetDataEvent(isLoading: false));
-        } catch (e) {
-          log(e.toString());
-        }
-      },
-    );
+    // on<ChatDetailSendImageEvent>(
+    //   (event, emit) async {
+    //     try {
+    //       chatLoadingBloc.add(const ChatLoadingUploadImageEvent(isLoading: true));
+    //       await chatDetailUsecase.sendImageMsg(
+    //         path: event.filePath,
+    //         room: event.room,
+    //         fileName: event.fileName,
+    //         uri: event.uri,
+    //       );
+    //       chatLoadingBloc.add(const ChatLoadingUploadImageEvent(isLoading: false));
+    //     } catch (e) {
+    //       log(e.toString());
+    //     }
+    //   },
+    // );
   }
 }

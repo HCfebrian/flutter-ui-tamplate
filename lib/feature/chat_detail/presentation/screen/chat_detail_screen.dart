@@ -331,14 +331,15 @@ class _ChatDetailState extends State<ChatDetail> {
     log('file name ${result?.name}');
 
     if (result != null) {
-      BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingSetDataEvent(isLoading: true));
-      BlocProvider.of<ChatDetailBloc>(context).add(
-        ChatDetailSendImageEvent(
-          filePath: result.path,
-          room: widget.room,
-          fileName: result.name,
-        ),
-      );
+      BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingUploadImageEvent(
+          pathImage: result.path, fileName: result.name, room: widget.room));
+      // BlocProvider.of<ChatDetailBloc>(context).add(
+      //   ChatDetailSendImageEvent(
+      //     filePath: result.path,
+      //     room: widget.room,
+      //     fileName: result.name,
+      //   ),
+      // );
     }
   }
 
@@ -382,87 +383,86 @@ class _ChatDetailState extends State<ChatDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatLoadingBloc, ChatLoadingState>(
-      builder: (context, state) {
-        if(state is ChatLoadingProcessState){
-          // _setAttachmentUploading(true);
-        }else{
-          // _setAttachmentUploading(false);
-        }
-        log("halo state ${state.toString()}");
-        return Scaffold(
-          appBar: AppBar(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.name),
-                BlocBuilder<ChatDetailStatusBloc, ChatDetailStatusState>(
-                  builder: (context, state) {
-                    if (state is ChatDetailCurrentStatus) {
-                      if (state.chatStatus == ChatStatus.typing) {
-                        return const Text(
-                          'Typing...',
-                          style: TextStyle(fontSize: 10),
-                        );
-                      }
-                      if (state.chatStatus == ChatStatus.online) {
-                        return const Text(
-                          'online',
-                          style: TextStyle(fontSize: 10),
-                        );
-                      }
-                      if (state.chatStatus == ChatStatus.offline) {
-                        return const SizedBox();
-                      }
-                    }
+    return BlocListener<ChatLoadingBloc, ChatLoadingState>(
+  listener: (context, state) {
+    if(state is ChatLoadingProcessState){
+      _setAttachmentUploading(true);
+    }else {
+      _setAttachmentUploading(false);
+    }
+  },
+  child: Scaffold(
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.name),
+            BlocBuilder<ChatDetailStatusBloc, ChatDetailStatusState>(
+              builder: (context, state) {
+                if (state is ChatDetailCurrentStatus) {
+                  if (state.chatStatus == ChatStatus.typing) {
+                    return const Text(
+                      'Typing...',
+                      style: TextStyle(fontSize: 10),
+                    );
+                  }
+                  if (state.chatStatus == ChatStatus.online) {
+                    return const Text(
+                      'online',
+                      style: TextStyle(fontSize: 10),
+                    );
+                  }
+                  if (state.chatStatus == ChatStatus.offline) {
                     return const SizedBox();
-                  },
-                ),
-              ],
+                  }
+                }
+                return const SizedBox();
+              },
             ),
-          ),
-          body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
-            builder: (context, state) {
-              if (state is ChatDetailErrorState) {
-                return const Expanded(
-                  child: Center(
-                    child: Text('Error'),
-                  ),
-                );
-              }
-              if (state is ChatDetailLoadingState) {
-                print('show loading state');
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (state is ChatDetailLoadedState) {
-                return SafeArea(
-                  bottom: false,
-                  child: Chat(
-                    customBottomWidget: _buildCustomTextInput(),
-                    bubbleBuilder: _bubbleBuilder,
-                    isAttachmentUploading: _isAttachmentUploading,
-                    messages: state.listMessage,
-                    onAttachmentPressed: _handleAtachmentPressed,
-                    onMessageTap: _handleMessageTap,
-                    onPreviewDataFetched: _handlePreviewDataFetched,
-                    onSendPressed: _handleSendPressed,
-                    onMessageLongPress: _handleLongPress,
-                    onTextChanged: _handleOnTextChange,
-                    onEndReached: _handleOnReachEnd,
-                    user: types.User(
-                      id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                    ),
-                  ),
-                );
-              }
-              return Container();
-            },
-          ),
-        );
-      },
-    );
+          ],
+        ),
+      ),
+      body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
+        builder: (context, state) {
+          if (state is ChatDetailErrorState) {
+            return const Expanded(
+              child: Center(
+                child: Text('Error'),
+              ),
+            );
+          }
+          if (state is ChatDetailLoadingState) {
+            print('show loading state');
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ChatDetailLoadedState) {
+            return SafeArea(
+              bottom: false,
+              child: Chat(
+                customBottomWidget: _buildCustomTextInput(),
+                bubbleBuilder: _bubbleBuilder,
+                isAttachmentUploading: _isAttachmentUploading,
+                messages: state.listMessage,
+                onAttachmentPressed: _handleAtachmentPressed,
+                onMessageTap: _handleMessageTap,
+                onPreviewDataFetched: _handlePreviewDataFetched,
+                onSendPressed: _handleSendPressed,
+                onMessageLongPress: _handleLongPress,
+                onTextChanged: _handleOnTextChange,
+                onEndReached: _handleOnReachEnd,
+                user: types.User(
+                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                ),
+              ),
+            );
+          }
+          return Container();
+        },
+      ),
+    ),
+);
   }
 
   Column _buildCustomTextInput() {

@@ -81,20 +81,33 @@ class ChatDetailUsecase {
     required DateTime currentTime,
   }) async {}
 
+  Future<String> uploadImage({
+    required String path,
+    required String fileName,
+  }) async {
+    final file = File(path);
+    final uri = await chatDetailRepoAbs.uploadImageStorage(
+        file: file, fileName: fileName);
+    if (uri != null) {
+      return uri;
+    } else {
+      throw Exception("uri not found");
+    }
+  }
+
   Future sendImageMsg({
+    required String uri,
     required String path,
     required String fileName,
     required types.Room room,
   }) async {
-    final file = File(path);
-    final size = file.lengthSync();
-    final bytes = await file.readAsBytes();
-    final image = await decodeImageFromList(bytes);
+    if (uri != null || uri.isNotEmpty) {
+      final file = File(path);
+      final size = file.lengthSync();
+      final bytes = await file.readAsBytes();
+      final image = await decodeImageFromList(bytes);
 
-    final user = await userUsecase.getUserData();
-    final uri = await chatDetailRepoAbs.uploadImageStorage(
-        file: file, fileName: fileName);
-    if (uri != null || uri!.isNotEmpty) {
+      final user = await userUsecase.getUserData();
       final message = types.PartialImage(
         height: image.height.toDouble(),
         name: fileName,
@@ -102,6 +115,7 @@ class ChatDetailUsecase {
         uri: uri,
         width: image.width.toDouble(),
       );
+
       final messageMap = message.toJson();
       messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
       messageMap['authorId'] = user?.id;
