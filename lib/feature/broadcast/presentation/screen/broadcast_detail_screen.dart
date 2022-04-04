@@ -7,7 +7,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
-import 'package:simple_flutter/feature/broadcast/presentation/screen/broadcast_list_user_screen.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
 
 class BroadcastDetailScreen extends StatefulWidget {
@@ -27,89 +27,108 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<BroadcastBloc, BroadcastState>(
       listener: (context, state) {
-        if (state is UserLoggedOutState) {
-          myUserId = null;
+        if (state is BroadcastLoadingState) {
+          // showAboutDialog(context: (context) => CircularProgressIndicator());
+          showDialog(
+            context: context,
+            builder: (context) => GestureDetector(
+              child: const CircularProgressIndicator(),
+            ),
+          );
         }
-        if (state is UserLoggedInState) {
-          myUserId = state.userEntity.id;
+        if (state is BroadcastSuccessState) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MessagesList()),
+              (route) => false);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Broadcast Message'),
-          actions: [
-            GestureDetector(
-              child: const Icon(Icons.people_outline_rounded),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BroadcastListUserScreen(),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(
-              width: 20,
-            )
-          ],
-        ),
-        body: SafeArea(
-          bottom: false,
-          child: Chat(
-            emptyState: StreamBuilder<List<types.User>>(
-              stream: FirebaseChatCore.instance.users(),
-              initialData: const [],
-              builder: (context, snapshot) {
-                List<types.User> userList = [];
+      child: BlocListener<UserBloc, UserState>(
+        listener: (context, state) {
+          if (state is UserLoggedOutState) {
+            myUserId = null;
+          }
+          if (state is UserLoggedInState) {
+            myUserId = state.userEntity.id;
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Broadcast Message to'),
+            actions: [
+              // GestureDetector(
+              //   child: const Icon(Icons.people_outline_rounded),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const BroadcastListUserScreen(),
+              //       ),
+              //     );
+              //   },
+              // ),
+              // const SizedBox(
+              //   width: 20,
+              // )
+            ],
+          ),
+          body: SafeArea(
+            bottom: false,
+            child: Chat(
+              emptyState: StreamBuilder<List<types.User>>(
+                stream: FirebaseChatCore.instance.users(),
+                initialData: const [],
+                builder: (context, snapshot) {
+                  List<types.User> userList = [];
 
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      bottom: 200,
-                    ),
-                    child: const Text('No users'),
-                  );
-                }
-                snapshot.data!.forEach((element) {
-                  if (widget.listUserBroadcast.contains(element.id)) {
-                    userList.add(element);
-                  }
-                });
-
-                return ListView.builder(
-                  itemCount: userList.length,
-                  itemBuilder: (context, index) {
-                    final user = userList[index];
-                    return ContactTileWidget(
-                      myUserId: myUserId,
-                      otherUser: user,
-                      isBroadcast: false,
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(
+                        bottom: 200,
+                      ),
+                      child: const Text('No users'),
                     );
-                  },
-                );
+                  }
+                  snapshot.data!.forEach((element) {
+                    if (widget.listUserBroadcast.contains(element.id)) {
+                      userList.add(element);
+                    }
+                  });
+
+                  return ListView.builder(
+                    itemCount: userList.length,
+                    itemBuilder: (context, index) {
+                      final user = userList[index];
+                      return ContactTileWidget(
+                        myUserId: myUserId,
+                        otherUser: user,
+                        isBroadcast: false,
+                      );
+                    },
+                  );
+                },
+              ),
+              user: types.User(
+                id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+              ),
+              onSendPressed: (types.PartialText message) {
+                try {
+                  log("send messages " + message.text);
+                  BlocProvider.of<BroadcastBloc>(context).add(
+                    BroadcastSendMessageEvent(
+                      listUserId: listUserBroadcastId,
+                      messages: message,
+                    ),
+                  );
+                } catch (e) {
+                  log(e.toString());
+                }
               },
+              messages: [],
             ),
-            user: types.User(
-              id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-            ),
-            onSendPressed: (types.PartialText message) {
-              try {
-                log("send messages " + message.text);
-                BlocProvider.of<BroadcastBloc>(context).add(
-                  BroadcastSendMessageEvent(
-                    listUserId: listUserBroadcastId,
-                    messages: message,
-                  ),
-                );
-              } catch (e) {
-                log(e.toString());
-              }
-            },
-            messages: [],
           ),
         ),
       ),

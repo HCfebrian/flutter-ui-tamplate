@@ -55,16 +55,21 @@ exports.notifyNewMessage = functions.firestore
         const message = docSnapshot.data();
         const authorId = message['authorId'];
         const roomId = context.params.roomId;
-
+        var senderName = "";
+        var senderUrl = "";
+        admin.firestore().doc('users/'+authorId).get().then(sender => {
+          senderName = sender.get("firstName");
+          senderUrl = sender.get("imageUrl");
+        });
+        
         return admin.firestore().doc('rooms/' + roomId).get().then(roomDoc => {
-          var userIds = Array();  
+          var userIds = Array();
           userIds = roomDoc.get('userIds');
             userIds.forEach((userId)=>{
               if(userId != authorId){
-                
+
                 return admin.firestore().doc('users/'+userId).get().then((user)=>{
                   const fcmToken = user.get("fcmTokenDevice");
-                  const senderName = user.get("firstName");
                   const notificationBody = (message['type'] === "text") ? message['text'] : "You received a new message."
                 const payload = {
                     notification: {
@@ -76,7 +81,8 @@ exports.notifyNewMessage = functions.firestore
                         AUTHOR_ID: authorId,
                         ROOM_ID: roomId,
                         SENDER_NAME: senderName,
-                        BODY: notificationBody
+                        BODY: notificationBody,
+                        USER_PROFILE_URL: senderUrl
 
                     }
                 }

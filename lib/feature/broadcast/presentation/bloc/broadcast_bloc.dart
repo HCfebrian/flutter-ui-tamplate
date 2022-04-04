@@ -19,11 +19,13 @@ class BroadcastBloc extends Bloc<BroadcastEvent, BroadcastState> {
     });
     on<BroadcastSendMessageEvent>((event, emit) async {
       log("test broadcast");
+      emit(BroadcastLoadingState());
       await broadcastUsecase.sendTextBroadcast(
         message: event.messages,
         listUserId: event.listUserId,
         myUserId: FirebaseAuth.instance.currentUser!.uid,
       );
+      emit(BroadcastSuccessState());
     });
   }
 }
