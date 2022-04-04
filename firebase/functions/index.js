@@ -72,11 +72,11 @@ exports.notifyNewMessage = functions.firestore
                   const fcmToken = user.get("fcmTokenDevice");
                   const notificationBody = (message['type'] === "text") ? message['text'] : "You received a new message."
                 const payload = {
-                    notification: {
-                        title: senderName,
-                        body: notificationBody,
-                        clickAction: "ChatActivity"
-                    },
+                    // notification: {
+                    //     title: senderName,
+                    //     body: notificationBody,
+                    //     clickAction: "ChatActivity"
+                    // },
                     data: {
                         AUTHOR_ID: authorId,
                         ROOM_ID: roomId,

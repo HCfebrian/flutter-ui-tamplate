@@ -18,102 +18,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    log("message background ${message.data} ");
-
-    if (message.notification != null) {
-      await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: createUniqueID(AwesomeNotifications.maxID),
-              groupKey: "chat_group",
-              channelKey: 'chat_channel',
-              summary: "chatName",
-              title: "${message.notification?.title}",
-              body: "${message.notification?.body}",
-              notificationLayout: NotificationLayout.Messaging,
-              category: NotificationCategory.Message),
-          actionButtons: [
-            NotificationActionButton(
-              key: 'REPLY',
-              label: 'Reply',
-              buttonType: ActionButtonType.InputField,
-              autoDismissible: false,
-            ),
-            NotificationActionButton(
-              key: 'READ',
-              label: 'Mark as Read',
-              autoDismissible: true,
-              buttonType: ActionButtonType.InputField,
-            )
-          ]);
-
-      // AwesomeNotifications().createNotification(
-      //   content: NotificationContent(
-      //     id: DateTime.now().microsecond,
-      //     channelKey: 'chat_channel',
-      //     groupKey: "chat_group",
-      //     displayOnBackground: true,
-      //     displayOnForeground: false,
-      //     notificationLayout: NotificationLayout.Messaging,
-      //     title: "${message.notification?.title}",
-      //     body: "${message.notification?.body}",
-      //   ),
-      // );
-      log('Message also contained a notification: ${message.notification!.title.toString()}');
-    }
-  }
 
   @override
   void initState() {
     BlocProvider.of<SplashScreenBloc>(context).add(SplashScreenInitEvent());
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    FirebaseMessaging.onMessage.listen((message) async {
-      if (message.notification != null) {
-        log(" title : ${message.notification?.title}");
-        log(" body : ${message.notification?.body}");
-        log(" data : ${message.data}");
-        await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: createUniqueID(AwesomeNotifications.maxID),
-                groupKey: "chat_group",
-                channelKey: 'chat_channel',
-                summary: "chatName",
-                title: "${message.notification?.title}",
-                body: "${message.notification?.body}",
-                largeIcon: "${message.data["USER_PROFILE_URL"]}",
-                notificationLayout: NotificationLayout.Messaging,
-                category: NotificationCategory.Message),
-            actionButtons: [
-              // NotificationActionButton(
-              //   key: 'REPLY',
-              //   label: 'Reply',
-              //   buttonType: ActionButtonType.InputField,
-              //   autoDismissible: false,
-              // ),
-              // NotificationActionButton(
-              //   key: 'READ',
-              //   label: 'Mark as Read',
-              //   autoDismissible: true,
-              //   buttonType: ActionButtonType.InputField,
-              // )
-            ]);
-
-        // AwesomeNotifications().createNotification(
-        //   content: NotificationContent(
-        //     id: DateTime.now().microsecond,
-        //     channelKey: 'chat_channel',
-        //     groupKey: "chat_group",
-        //     displayOnBackground: true,
-        //     displayOnForeground: false,
-        //     notificationLayout: NotificationLayout.Messaging,
-        //     title: "${message.notification?.title}",
-        //     body: "${message.notification?.body}",
-        //   ),
-        // );
-        log('Message also contained a notification: ${message.notification!.title.toString()}');
-      }
-    });
     super.initState();
   }
 
@@ -137,4 +46,76 @@ class _SplashScreenState extends State<SplashScreen> {
 int createUniqueID(int maxValue) {
   math.Random random = math.Random();
   return random.nextInt(maxValue);
+}
+
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  log('Handling a background message: ${message.messageId}');
+
+  if(
+  !AwesomeStringUtils.isNullOrEmpty("${message.data["SENDER_NAME"]}", considerWhiteSpaceAsEmpty: true) ||
+      !AwesomeStringUtils.isNullOrEmpty("${message.data["BODY"]}", considerWhiteSpaceAsEmpty: true)
+  ) {
+
+    log(" title : ${message.data["SENDER_NAME"]}");
+    log(" body : ${message.data["BODY"]}");
+    log(" data : ${message.data}");
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: createUniqueID(AwesomeNotifications.maxID),
+            groupKey: "chat_group",
+            channelKey: 'chat_channel',
+            summary: "chatName",
+            title: "${message.data["SENDER_NAME"]}",
+            body: "${message.data["BODY"]}",
+            largeIcon: "${message.data["USER_PROFILE_URL"]}",
+            notificationLayout: NotificationLayout.Messaging,
+            category: NotificationCategory.Message),
+        actionButtons: [
+          // NotificationActionButton(
+          //   key: 'REPLY',
+          //  FirebaseMessaging.onBackgroundMessage label: 'Reply',
+          //   buttonType: ActionButtonType.InputField,
+          //   autoDismissible: false,
+          // ),
+          // NotificationActionButton(
+          //   key: 'READ',
+          //   label: 'Mark as Read',
+          //   autoDismissible: true,
+          //   buttonType: ActionButtonType.InputField,
+          // )
+        ]);
+  }
+  else {
+
+    log(" title : ${message.data["SENDER_NAME"]}");
+    log(" body : ${message.data["BODY"]}");
+    log(" data : ${message.data}");
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: createUniqueID(AwesomeNotifications.maxID),
+            groupKey: "chat_group",
+            channelKey: 'chat_channel',
+            summary: "chatName",
+            title: "${message.data["SENDER_NAME"]}",
+            body: "${message.data["BODY"]}",
+            largeIcon: "${message.data["USER_PROFILE_URL"]}",
+            notificationLayout: NotificationLayout.Messaging,
+            category: NotificationCategory.Message),
+        actionButtons: [
+          // NotificationActionButton(
+          //   key: 'REPLY',
+          //  FirebaseMessaging.onBackgroundMessage label: 'Reply',
+          //   buttonType: ActionButtonType.InputField,
+          //   autoDismissible: false,
+          // ),
+          // NotificationActionButton(
+          //   key: 'READ',
+          //   label: 'Mark as Read',
+          //   autoDismissible: true,
+          //   buttonType: ActionButtonType.InputField,
+          // )
+        ]);  }
 }
