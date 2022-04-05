@@ -1,10 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
@@ -24,6 +29,115 @@ class BroadcastDetailScreen extends StatefulWidget {
 
 class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
   String? myUserId;
+  bool _isAttachmentUploading = false;
+
+  Future<void> _handleImageSelection() async {
+    final result = await ImagePicker().pickImage(
+      imageQuality: 70,
+      maxWidth: 1440,
+      source: ImageSource.camera,
+    );
+    log('file name ${result?.name}');
+
+    if (result != null) {
+      // BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingUploadImageEvent(
+      //     pathImage: result.path, fileName: result.name, room: widget.room));
+
+      // BlocProvider.of<ChatDetailBloc>(context).add(
+      //   ChatDetailSendImageEvent(
+      //     filePath: result.path,
+      //     room: widget.room,
+      //     fileName: result.name,
+      //   ),
+      // );
+    }
+  }
+
+  void _setAttachmentUploading(bool uploading) {
+    setState(() {
+      _isAttachmentUploading = uploading;
+    });
+  }
+
+  Future<void> _handleFileSelection() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
+
+    if (result != null && result.files.single.path != null) {
+      _setAttachmentUploading(true);
+      final name = result.files.single.name;
+      final filePath = result.files.single.path!;
+      final file = File(filePath);
+
+      try {
+        final reference = FirebaseStorage.instance.ref(name);
+        await reference.putFile(file);
+        final uri = await reference.getDownloadURL();
+
+        final message = types.PartialFile(
+          mimeType: lookupMimeType(filePath),
+          name: name,
+          size: result.files.single.size,
+          uri: uri,
+        );
+
+        BlocProvider.of<BroadcastBloc>(context)
+            .add(BroadcastSendFileMessageEvent(
+          listUserId: listUserBroadcastId,
+          messages: message,
+        ));
+        _setAttachmentUploading(false);
+      } finally {
+        _setAttachmentUploading(false);
+      }
+    }
+  }
+
+  void _handleAtachmentPressed() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: SizedBox(
+            height: 144,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _handleImageSelection();
+                  },
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Photo'),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _handleFileSelection();
+                  },
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('File'),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Cancel'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +191,7 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
           body: SafeArea(
             bottom: false,
             child: Chat(
+              isAttachmentUploading: _isAttachmentUploading,
               emptyState: StreamBuilder<List<types.User>>(
                 stream: FirebaseChatCore.instance.users(),
                 initialData: const [],
@@ -114,6 +229,7 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
               user: types.User(
                 id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
               ),
+              onAttachmentPressed: _handleAtachmentPressed,
               onSendPressed: (types.PartialText message) {
                 try {
                   log("send messages " + message.text);

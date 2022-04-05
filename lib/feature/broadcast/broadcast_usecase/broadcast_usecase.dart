@@ -55,4 +55,24 @@ class BroadcastUsecase {
     );
     return;
   }
+
+  Future sendFileBroadcast({
+    required types.PartialFile message,
+    required List<String> listUserId,
+    required String myUserId,
+  }) async {
+    final allOtherRoomId =
+        await getRoomId(listUserId: listUserId, myUserId: myUserId);
+    log('send to ${allOtherRoomId.length} people');
+    await Future.forEach(
+      allOtherRoomId,
+      (element) async {
+        await chatDetailUsecase.sendFileMsg(
+          partialFile: message,
+          roomId: element.toString(),
+        );
+      },
+    );
+    return;
+  }
 }

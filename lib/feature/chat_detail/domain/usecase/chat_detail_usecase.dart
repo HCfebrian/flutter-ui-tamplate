@@ -68,6 +68,40 @@ class ChatDetailUsecase {
     chatDetailRepoAbs.sendMessage(message: messageMap, roomId: roomId);
   }
 
+  Future sendFileMsg({
+    required types.PartialFile partialFile,
+    required String roomId,
+    String? replayRefId,
+    String? replayType,
+    String? replayContent,
+    String? replayToAuthorName,
+  }) async {
+    log('Send message');
+    final user = await userUsecase.getUserData();
+    final types.Message message = types.FileMessage.fromPartial(
+      author: types.User(id: user!.id),
+      id: '',
+      partialFile: partialFile,
+    );
+
+    final messageMap = message.toJson();
+    messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+    messageMap['authorId'] = user.id;
+    messageMap['createdAt'] = FieldValue.serverTimestamp();
+    messageMap['updatedAt'] = FieldValue.serverTimestamp();
+    messageMap['metadata'] = {
+      'replayTo': replayRefId,
+      'replayType': replayType,
+      'replayContent': replayContent,
+      'replayToAuthorName': replayToAuthorName,
+    };
+
+    log("usecase send message data : $messageMap");
+
+    chatDetailRepoAbs.sendMessage(message: messageMap, roomId: roomId);
+  }
+
+
   Future addToSenderContact({
     required String senderId,
     required String receiverId,
