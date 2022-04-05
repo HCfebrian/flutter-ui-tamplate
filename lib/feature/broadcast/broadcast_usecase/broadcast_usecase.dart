@@ -2,14 +2,20 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:simple_flutter/feature/chat_detail/domain/contract_repo/chat_detail_repo_abs.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
+import 'package:simple_flutter/feature/chat_list/domain/usecase/chat_usecase.dart';
 
 import '../../../core/constant/static_constant.dart';
 
 class BroadcastUsecase {
   final ChatDetailUsecase chatDetailUsecase;
+  final ChatDetailRepoAbs chatDetailRepoAbs;
 
-  const BroadcastUsecase({required this.chatDetailUsecase});
+  const BroadcastUsecase({
+    required this.chatDetailUsecase,
+    required this.chatDetailRepoAbs,
+  });
 
   Future<List<String>> getRoomId(
       {required List<String> listUserId, required String myUserId}) async {
@@ -71,6 +77,31 @@ class BroadcastUsecase {
           partialFile: message,
           roomId: element.toString(),
         );
+      },
+    );
+    return;
+  }
+
+  Future sendImageBroadcast({
+    required types.PartialImage message,
+    required List<String> listUserId,
+    required String myUserId,
+  }) async {
+    final allOtherRoomId =
+        await getRoomId(listUserId: listUserId, myUserId: myUserId);
+    log('send to ${allOtherRoomId.length} people');
+    await Future.forEach(
+      allOtherRoomId,
+      (element) async {
+        final messageMap = message.toJson();
+        messageMap.removeWhere((key, value) => key == 'author' || key == 'id');
+        messageMap['authorId'] = myUserId;
+        messageMap['createdAt'] = FieldValue.serverTimestamp();
+        messageMap['updatedAt'] = FieldValue.serverTimestamp();
+        messageMap['type'] = 'image';
+        messageMap['metadata'] = {};
+
+        chatDetailRepoAbs.sendMessage(message: messageMap, roomId: element.toString());
       },
     );
     return;

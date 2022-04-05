@@ -12,8 +12,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/messages_screen.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
+import 'package:simple_flutter/get_it.dart';
 
 class BroadcastDetailScreen extends StatefulWidget {
   final List<String> listUserBroadcast;
@@ -37,11 +39,32 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
       maxWidth: 1440,
       source: ImageSource.camera,
     );
+    _setAttachmentUploading(true);
     log('file name ${result?.name}');
+    final ChatDetailUsecase chatUsecase = getIt();
+    final uri = await chatUsecase.uploadImage(
+      path: result!.path,
+      fileName: result.name,
+    );
 
     if (result != null) {
-      // BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingUploadImageEvent(
-      //     pathImage: result.path, fileName: result.name, room: widget.room));
+      final file = File(result.path);
+      final size = file.lengthSync();
+      final bytes = await file.readAsBytes();
+      final image = await decodeImageFromList(bytes);
+
+      final message = types.PartialImage(
+        height: image.height.toDouble(),
+        name: result.name,
+        size: size,
+        uri: uri,
+        width: image.width.toDouble(),
+      );
+
+      BlocProvider.of<BroadcastBloc>(context).add(
+        BroadcastSendImageMessageEvent(
+            messages: message, listUserId: listUserBroadcastId),
+      );
 
       // BlocProvider.of<ChatDetailBloc>(context).add(
       //   ChatDetailSendImageEvent(

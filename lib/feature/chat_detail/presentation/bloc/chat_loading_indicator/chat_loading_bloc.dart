@@ -23,7 +23,7 @@ class ChatLoadingBloc extends Bloc<ChatLoadingEvent, ChatLoadingState> {
       await chatUsecase.sendImageMsg(uri: uri,
           path: event.pathImage,
           fileName: event.fileName,
-          room: event.room);
+          room: event.room.id);
       emit(ChatLoadingInitial());
       log("loading state now " + state.toString());
     });

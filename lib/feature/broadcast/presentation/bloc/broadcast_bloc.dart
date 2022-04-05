@@ -38,5 +38,16 @@ class BroadcastBloc extends Bloc<BroadcastEvent, BroadcastState> {
       );
       emit(BroadcastSuccessState());
     });
+
+    on<BroadcastSendImageMessageEvent>((event, emit) async {
+      log("test broadcast");
+      emit(BroadcastLoadingState());
+      await broadcastUsecase.sendImageBroadcast(
+        message: event.messages,
+        listUserId: event.listUserId,
+        myUserId: FirebaseAuth.instance.currentUser!.uid,
+      );
+      emit(BroadcastSuccessState());
+    });
   }
 }

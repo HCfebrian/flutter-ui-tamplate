@@ -132,7 +132,7 @@ class ChatDetailUsecase {
     required String uri,
     required String path,
     required String fileName,
-    required types.Room room,
+    required String room,
   }) async {
     if (uri != null || uri.isNotEmpty) {
       final file = File(path);
@@ -157,7 +157,7 @@ class ChatDetailUsecase {
       messageMap['type'] = 'image';
       messageMap['metadata'] = {};
 
-      chatDetailRepoAbs.sendMessage(message: messageMap, roomId: room.id);
+      chatDetailRepoAbs.sendMessage(message: messageMap, roomId: room);
     }
   }
 

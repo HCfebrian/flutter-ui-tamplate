@@ -29,3 +29,16 @@ class BroadcastSendFileMessageEvent extends BroadcastEvent {
   @override
   List<Object?> get props => [];
 }
+
+class BroadcastSendImageMessageEvent extends BroadcastEvent {
+  final List<String> listUserId;
+  final types.PartialImage messages;
+
+  const BroadcastSendImageMessageEvent({
+    required this.listUserId,
+    required this.messages,
+  });
+
+  @override
+  List<Object?> get props => [];
+}
