@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:simple_flutter/core/color/chat_thame.dart';
 import 'package:simple_flutter/feature/auth/domain/entity/user_entity.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
@@ -79,6 +80,7 @@ class _MessagesListState extends State<MessagesList> {
           }
           return Scaffold(
             floatingActionButton: FloatingActionButton(
+              backgroundColor: ChatThemeCustom.fabColor,
               child: const Icon(Icons.add),
               onPressed: () {
                 Navigator.of(context).push(
@@ -90,14 +92,19 @@ class _MessagesListState extends State<MessagesList> {
               },
             ),
             appBar: AppBar(
+              backgroundColor: ChatThemeCustom.barColor,
               automaticallyImplyLeading: false,
-              title: const Text('Chat'),
+              title: Text(
+                'Chat',
+                style: TextStyle(color: ChatThemeCustom.barContentColor),
+              ),
               actions: [
                 IconButton(
                   onPressed: () {
                     BlocProvider.of<AuthBloc>(context).add(AuthLogoutEvent());
                   },
-                  icon: const Icon(Icons.logout),
+                  icon: Icon(Icons.logout,
+                      color: ChatThemeCustom.barContentColor),
                 )
               ],
             ),

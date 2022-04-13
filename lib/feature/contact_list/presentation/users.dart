@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:simple_flutter/core/color/chat_thame.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/screen/broadcast_detail_screen.dart';
 import 'package:simple_flutter/utils/background_utils.dart';
@@ -44,7 +45,8 @@ class _UsersPageState extends State<UsersPage> {
       child: Scaffold(
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          title: const Text('Users'),
+          backgroundColor: ChatThemeCustom.barColor,
+          title:  Text('Users', style: TextStyle(color: ChatThemeCustom.barContentColor),),
           actions: [
             if (isBroadcast)
               GestureDetector(
@@ -101,7 +103,7 @@ class _UsersPageState extends State<UsersPage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    color: Colors.blue,
+                    color: ChatThemeCustom.barColor,
                     child: isBroadcast
                         ? GestureDetector(
                             onTap: () {

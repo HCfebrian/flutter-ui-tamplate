@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:simple_flutter/core/color/chat_thame.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
@@ -68,10 +69,9 @@ class _ChatDetailState extends State<ChatDetail> {
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
               child: Bubble(
-                  color: state.userEntity.id != message.author.id ||
-                          message.type == types.MessageType.image
-                      ? const Color(0xfff5f5f7)
-                      : const Color(0xff6f61e8),
+                  color: state.userEntity.id != message.author.id
+                      ? ChatThemeCustom.peopleBubbleColor
+                      : ChatThemeCustom.myBubbleColor,
                   margin: const BubbleEdges.symmetric(horizontal: 0),
                   nip: state.userEntity.id != message.author.id
                       ? BubbleNip.leftBottom
@@ -381,88 +381,106 @@ class _ChatDetailState extends State<ChatDetail> {
     super.dispose();
   }
 
+  Widget _backButton() {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.only(top: 10, bottom: 5),
+        child: Icon(Icons.arrow_back, color: ChatThemeCustom.barContentColor),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ChatLoadingBloc, ChatLoadingState>(
-  listener: (context, state) {
-    if(state is ChatLoadingProcessState){
-      _setAttachmentUploading(true);
-    }else {
-      _setAttachmentUploading(false);
-    }
-  },
-  child: Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.name),
-            BlocBuilder<ChatDetailStatusBloc, ChatDetailStatusState>(
-              builder: (context, state) {
-                if (state is ChatDetailCurrentStatus) {
-                  if (state.chatStatus == ChatStatus.typing) {
-                    return const Text(
-                      'Typing...',
-                      style: TextStyle(fontSize: 10),
-                    );
+      listener: (context, state) {
+        if (state is ChatLoadingProcessState) {
+          _setAttachmentUploading(true);
+        } else {
+          _setAttachmentUploading(false);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: _backButton(),
+          automaticallyImplyLeading: false,
+          backgroundColor: ChatThemeCustom.barColor,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.name,
+                style: TextStyle(color: ChatThemeCustom.barContentColor),
+              ),
+              BlocBuilder<ChatDetailStatusBloc, ChatDetailStatusState>(
+                builder: (context, state) {
+                  if (state is ChatDetailCurrentStatus) {
+                    if (state.chatStatus == ChatStatus.typing) {
+                      return const Text(
+                        'Typing...',
+                        style: TextStyle(fontSize: 10),
+                      );
+                    }
+                    if (state.chatStatus == ChatStatus.online) {
+                      return const Text(
+                        'online',
+                        style: TextStyle(fontSize: 10),
+                      );
+                    }
+                    if (state.chatStatus == ChatStatus.offline) {
+                      return const SizedBox();
+                    }
                   }
-                  if (state.chatStatus == ChatStatus.online) {
-                    return const Text(
-                      'online',
-                      style: TextStyle(fontSize: 10),
-                    );
-                  }
-                  if (state.chatStatus == ChatStatus.offline) {
-                    return const SizedBox();
-                  }
-                }
-                return const SizedBox();
-              },
-            ),
-          ],
+                  return const SizedBox();
+                },
+              ),
+            ],
+          ),
+        ),
+        body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
+          builder: (context, state) {
+            if (state is ChatDetailErrorState) {
+              return const Expanded(
+                child: Center(
+                  child: Text('Error'),
+                ),
+              );
+            }
+            if (state is ChatDetailLoadingState) {
+              print('show loading state');
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is ChatDetailLoadedState) {
+              return SafeArea(
+                bottom: false,
+                child: Chat(
+                  customBottomWidget: _buildCustomTextInput(),
+                  bubbleBuilder: _bubbleBuilder,
+                  isAttachmentUploading: _isAttachmentUploading,
+                  messages: state.listMessage,
+                  onAttachmentPressed: _handleAtachmentPressed,
+                  onMessageTap: _handleMessageTap,
+                  onPreviewDataFetched: _handlePreviewDataFetched,
+                  onSendPressed: _handleSendPressed,
+                  onMessageLongPress: _handleLongPress,
+                  onTextChanged: _handleOnTextChange,
+                  onEndReached: _handleOnReachEnd,
+                  user: types.User(
+                    id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                  ),
+                ),
+              );
+            }
+            return Container();
+          },
         ),
       ),
-      body: BlocBuilder<ChatDetailBloc, ChatDetailState>(
-        builder: (context, state) {
-          if (state is ChatDetailErrorState) {
-            return const Expanded(
-              child: Center(
-                child: Text('Error'),
-              ),
-            );
-          }
-          if (state is ChatDetailLoadingState) {
-            print('show loading state');
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (state is ChatDetailLoadedState) {
-            return SafeArea(
-              bottom: false,
-              child: Chat(
-                customBottomWidget: _buildCustomTextInput(),
-                bubbleBuilder: _bubbleBuilder,
-                isAttachmentUploading: _isAttachmentUploading,
-                messages: state.listMessage,
-                onAttachmentPressed: _handleAtachmentPressed,
-                onMessageTap: _handleMessageTap,
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                onMessageLongPress: _handleLongPress,
-                onTextChanged: _handleOnTextChange,
-                onEndReached: _handleOnReachEnd,
-                user: types.User(
-                  id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
-                ),
-              ),
-            );
-          }
-          return Container();
-        },
-      ),
-    ),
-);
+    );
   }
 
   Column _buildCustomTextInput() {

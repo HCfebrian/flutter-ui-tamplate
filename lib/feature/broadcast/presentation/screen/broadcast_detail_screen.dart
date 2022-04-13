@@ -10,6 +10,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
+import 'package:simple_flutter/core/color/chat_thame.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
@@ -193,7 +194,13 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Broadcast Message to'),
+            backgroundColor: ChatThemeCustom.barColor,
+            title: Text(
+              'Broadcast Message to',
+              style: TextStyle(
+                color: ChatThemeCustom.barContentColor,
+              ),
+            ),
             actions: [
               // GestureDetector(
               //   child: const Icon(Icons.people_outline_rounded),
