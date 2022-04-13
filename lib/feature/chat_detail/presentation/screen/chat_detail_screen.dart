@@ -18,7 +18,9 @@ import 'package:simple_flutter/core/color/chat_thame.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
+import 'package:simple_flutter/main_develop.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../bloc/chat_loading_indicator/chat_loading_bloc.dart';
 
@@ -332,15 +334,25 @@ class _ChatDetailState extends State<ChatDetail> {
     log('file name ${result?.name}');
 
     if (result != null) {
-      BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingUploadImageEvent(
-          pathImage: result.path, fileName: result.name, room: widget.room));
-      // BlocProvider.of<ChatDetailBloc>(context).add(
-      //   ChatDetailSendImageEvent(
-      //     filePath: result.path,
-      //     room: widget.room,
-      //     fileName: result.name,
-      //   ),
-      // );
+      final bytes = File(result.path).readAsBytesSync();
+      final image = await decodeImageFromList(bytes);
+      log('image ${image.toString()}');
+      final size = File(result.path).lengthSync();
+      Workmanager().registerOneOffTask(
+        DateTime.now().millisecond.toString(),
+        uploadImage,
+        inputData: {
+          "pathImage": result.path,
+          "fileName": result.name,
+          "room": widget.room.id,
+          "userId": widget.myUserId,
+          'height':image.height,
+          'width':image.width,
+          'size': size
+        },
+      );
+      // BlocProvider.of<ChatLoadingBloc>(context).add(ChatLoadingUploadImageEvent(
+      //     pathImage: result.path, fileName: result.name, room: widget.room));
     }
   }
 

@@ -14,7 +14,9 @@ import 'package:simple_flutter/feature/chat_detail/presentation/widget/custom_ca
 import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/color_configurator_screen.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
+import 'package:simple_flutter/main_develop.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
+import 'package:workmanager/workmanager.dart';
 
 class MessagesList extends StatefulWidget {
   const MessagesList({Key? key}) : super(key: key);
@@ -84,6 +86,8 @@ class _MessagesListState extends State<MessagesList> {
               backgroundColor: ChatThemeCustom.getFabColor(),
               child: const Icon(Icons.add),
               onPressed: () {
+                log("worker task");
+                // Workmanager().registerOneOffTask(uploadImage, uploadImage);
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     fullscreenDialog: true,

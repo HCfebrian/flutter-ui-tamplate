@@ -55,12 +55,11 @@ dependencies:
   firebase_messaging: ^11.2.6
   firebase_database: ^9.0.6
   swipe_to: ^1.0.1
-  flutter_local_notifications: ^9.4.0
+#  flutter_local_notifications: ^9.4.0
   awesome_notifications: ^0.6.21
   flutter_uploader: ^3.0.0-beta.3
   flutter_colorpicker: ^1.0.3
-  worker_manager: ^4.2.6
-
+  workmanager: ^0.4.1
 
 dev_dependencies:
   flutter_test:

@@ -33,7 +33,6 @@ class BroadcastDetailScreen extends StatefulWidget {
 class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
   String? myUserId;
   bool _isAttachmentUploading = false;
-  final ChatThemeCustom chatTheme = getIt();
 
   Future<void> _handleImageSelection() async {
     final result = await ImagePicker().pickImage(
@@ -49,33 +48,23 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
       fileName: result.name,
     );
 
-    if (result != null) {
-      final file = File(result.path);
-      final size = file.lengthSync();
-      final bytes = await file.readAsBytes();
-      final image = await decodeImageFromList(bytes);
+    final file = File(result.path);
+    final size = file.lengthSync();
+    final bytes = await file.readAsBytes();
+    final image = await decodeImageFromList(bytes);
 
-      final message = types.PartialImage(
-        height: image.height.toDouble(),
-        name: result.name,
-        size: size,
-        uri: uri,
-        width: image.width.toDouble(),
-      );
+    final message = types.PartialImage(
+      height: image.height.toDouble(),
+      name: result.name,
+      size: size,
+      uri: uri,
+      width: image.width.toDouble(),
+    );
 
-      BlocProvider.of<BroadcastBloc>(context).add(
-        BroadcastSendImageMessageEvent(
-            messages: message, listUserId: listUserBroadcastId),
-      );
-
-      // BlocProvider.of<ChatDetailBloc>(context).add(
-      //   ChatDetailSendImageEvent(
-      //     filePath: result.path,
-      //     room: widget.room,
-      //     fileName: result.name,
-      //   ),
-      // );
-    }
+    BlocProvider.of<BroadcastBloc>(context).add(
+      BroadcastSendImageMessageEvent(
+          messages: message, listUserId: listUserBroadcastId),
+    );
   }
 
   void _setAttachmentUploading(bool uploading) {

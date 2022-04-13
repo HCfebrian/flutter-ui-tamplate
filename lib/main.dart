@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +10,7 @@ import 'package:simple_flutter/core/constant/static_constant.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/broadcast/presentation/bloc/broadcast_bloc.dart';
+import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail/chat_detail_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_detail_status/chat_detail_status_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/bloc/chat_loading_indicator/chat_loading_bloc.dart';
@@ -17,13 +20,13 @@ import 'package:simple_flutter/feature/splash_screen/presentation/bloc/splashscr
 import 'package:simple_flutter/get_it.dart';
 import 'package:simple_flutter/translations/codegen_loader.g.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
+import 'package:workmanager/workmanager.dart';
 
 Future<void> mainInit() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-
   initDepInject();
   await Firebase.initializeApp();
+  await EasyLocalization.ensureInitialized();
+
 
   runApp(
     EasyLocalization(

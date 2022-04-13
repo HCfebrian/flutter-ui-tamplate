@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:simple_flutter/feature/chat_detail/domain/usecase/chat_detail_usecase.dart';
+import 'package:workmanager/workmanager.dart';
 
 part 'chat_loading_event.dart';
 
@@ -25,7 +26,7 @@ class ChatLoadingBloc extends Bloc<ChatLoadingEvent, ChatLoadingState> {
           fileName: event.fileName,
           room: event.room.id);
       emit(ChatLoadingInitial());
-      log("loading state now " + state.toString());
+      // log("loading state now " + state.toString());
     });
   }
 }
