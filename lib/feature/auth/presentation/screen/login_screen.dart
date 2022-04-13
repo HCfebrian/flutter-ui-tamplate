@@ -301,6 +301,7 @@ class _LoginPageState extends State<LoginPage> {
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
             if (state is UserLoggedInState) {
+              log('user logged in state');
               Navigator.pushNamed(context, AppRoute.messagesList);
             }
             if (state is UserLoggedOutState) {
