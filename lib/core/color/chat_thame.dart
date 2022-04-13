@@ -12,6 +12,8 @@ class ChatThemeCustom {
   //chat bubble theme
   static Color peopleBubbleColor = Colors.white12;
   static Color peopleBubbleTextColor = Colors.black54;
+  static Color myBubbleColor = Colors.greenAccent;
+  static Color myBubbleTextColor = Colors.black54;
 
   static Color getBarColor() {
     final SharedPreferences sharedPreferences = getIt();
@@ -63,4 +65,6 @@ class ChatThemeCustom {
     final SharedPreferences sharedPreferences = getIt();
     await sharedPreferences.setInt('fabColor', color.value);
   }
+
+
 }
