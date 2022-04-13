@@ -33,6 +33,7 @@ class BroadcastDetailScreen extends StatefulWidget {
 class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
   String? myUserId;
   bool _isAttachmentUploading = false;
+  final ChatThemeCustom chatTheme = getIt();
 
   Future<void> _handleImageSelection() async {
     final result = await ImagePicker().pickImage(
@@ -164,7 +165,13 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    log("build");
     return BlocListener<BroadcastBloc, BroadcastState>(
       listener: (context, state) {
         if (state is BroadcastLoadingState) {
@@ -194,7 +201,7 @@ class _BroadcastDetailScreenState extends State<BroadcastDetailScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: ChatThemeCustom.barColor,
+            backgroundColor: ChatThemeCustom.getBarColor(),
             title: Text(
               'Broadcast Message to',
               style: TextStyle(

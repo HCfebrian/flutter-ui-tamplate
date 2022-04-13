@@ -12,6 +12,7 @@ import 'package:simple_flutter/feature/auth/presentation/bloc/auth/auth_bloc.dar
 import 'package:simple_flutter/feature/auth/presentation/bloc/user/user_bloc.dart';
 import 'package:simple_flutter/feature/chat_detail/presentation/widget/custom_card.dart';
 import 'package:simple_flutter/feature/chat_list/presentation/bloc/chat_list_bloc.dart';
+import 'package:simple_flutter/feature/chat_list/presentation/color_configurator_screen.dart';
 import 'package:simple_flutter/feature/contact_list/presentation/users.dart';
 import 'package:simple_flutter/utils/route_generator.dart';
 
@@ -92,13 +93,25 @@ class _MessagesListState extends State<MessagesList> {
               },
             ),
             appBar: AppBar(
-              backgroundColor: ChatThemeCustom.barColor,
+              backgroundColor: ChatThemeCustom.getBarColor(),
               automaticallyImplyLeading: false,
               title: Text(
                 'Chat',
                 style: TextStyle(color: ChatThemeCustom.barContentColor),
               ),
               actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ColorConfiguratorScreen(),
+                        ),
+                        (route) => false);
+                  },
+                  icon: Icon(Icons.settings,
+                      color: ChatThemeCustom.barContentColor),
+                ),
                 IconButton(
                   onPressed: () {
                     BlocProvider.of<AuthBloc>(context).add(AuthLogoutEvent());

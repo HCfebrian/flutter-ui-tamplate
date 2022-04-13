@@ -46,6 +46,7 @@ class _ChatDetailState extends State<ChatDetail> {
   bool isBounch = false;
   late ChatDetailBloc chatDetailBloc;
   types.Message? replayMessage;
+  Color appBarColor = ChatThemeCustom.barColor;
 
   Future _handleOnReachEnd() async {
     BlocProvider.of<ChatDetailBloc>(context).add(ChatDetailNextPageEvent());
@@ -407,7 +408,7 @@ class _ChatDetailState extends State<ChatDetail> {
         appBar: AppBar(
           leading: _backButton(),
           automaticallyImplyLeading: false,
-          backgroundColor: ChatThemeCustom.barColor,
+          backgroundColor: ChatThemeCustom.getBarColor(),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-class ChatThemeCustom{
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_flutter/get_it.dart';
+
+class ChatThemeCustom {
   static Color barColor = Colors.redAccent;
   static Color barContentColor = Colors.black87;
   static Color fabColor = Colors.black87;
@@ -11,5 +15,39 @@ class ChatThemeCustom{
   static Color myBubbleColor = Colors.greenAccent;
   static Color myBubbleTextColor = Colors.black54;
 
-}
+  static Color getBarColor() {
+    final SharedPreferences sharedPreferences = getIt();
 
+    final result = sharedPreferences.getInt('barColor');
+    log("shared pref result $result");
+    if (result != null) {
+      return Color(result);
+    } else {
+      return barColor;
+    }
+  }
+
+  void setBarColor({required Color color}) {
+    final SharedPreferences sharedPreferences = getIt();
+    sharedPreferences.setInt('barColor', color.value);
+  }
+
+  static Color getBarContentColor() {
+    final SharedPreferences sharedPreferences = getIt();
+
+    final result = sharedPreferences.getInt('barContentColor');
+    log("shared pref result $result");
+    if (result != null) {
+      return Color(result);
+    } else {
+      return barColor;
+    }
+  }
+
+  Future setBarContentColor({required Color color}) async {
+    final SharedPreferences sharedPreferences = getIt();
+    await sharedPreferences.setInt('barContentColor', color.value);
+  }
+
+
+}

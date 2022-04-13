@@ -45,7 +45,7 @@ class _UsersPageState extends State<UsersPage> {
       child: Scaffold(
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          backgroundColor: ChatThemeCustom.barColor,
+          backgroundColor: ChatThemeCustom.getBarColor(),
           title:  Text('Users', style: TextStyle(color: ChatThemeCustom.barContentColor),),
           actions: [
             if (isBroadcast)
