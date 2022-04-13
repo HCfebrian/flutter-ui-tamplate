@@ -12,8 +12,6 @@ class ChatThemeCustom {
   //chat bubble theme
   static Color peopleBubbleColor = Colors.white12;
   static Color peopleBubbleTextColor = Colors.black54;
-  static Color myBubbleColor = Colors.greenAccent;
-  static Color myBubbleTextColor = Colors.black54;
 
   static Color getBarColor() {
     final SharedPreferences sharedPreferences = getIt();
@@ -40,7 +38,7 @@ class ChatThemeCustom {
     if (result != null) {
       return Color(result);
     } else {
-      return barColor;
+      return barContentColor;
     }
   }
 
@@ -49,5 +47,20 @@ class ChatThemeCustom {
     await sharedPreferences.setInt('barContentColor', color.value);
   }
 
+  static Color getFabColor() {
+    final SharedPreferences sharedPreferences = getIt();
 
+    final result = sharedPreferences.getInt('fabColor');
+    log("shared pref result $result");
+    if (result != null) {
+      return Color(result);
+    } else {
+      return fabColor;
+    }
+  }
+
+  Future setFabColor({required Color color}) async {
+    final SharedPreferences sharedPreferences = getIt();
+    await sharedPreferences.setInt('fabColor', color.value);
+  }
 }

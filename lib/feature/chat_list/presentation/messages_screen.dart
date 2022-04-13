@@ -81,7 +81,7 @@ class _MessagesListState extends State<MessagesList> {
           }
           return Scaffold(
             floatingActionButton: FloatingActionButton(
-              backgroundColor: ChatThemeCustom.fabColor,
+              backgroundColor: ChatThemeCustom.getFabColor(),
               child: const Icon(Icons.add),
               onPressed: () {
                 Navigator.of(context).push(
